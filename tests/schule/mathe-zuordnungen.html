@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mathe: Zuordnungen</title>
+<meta name="hub:area" content="schule">
+<meta name="hub:subject" content="Mathe">
+<meta name="hub:desc" content="Proportional, antiproportional, Dreisatz, Graphen zeichnen und ablesen · 22 Aufgaben">
+<meta name="hub:order" content="10">
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="../../engine/quiz.css">
+<script src="../../hub.js"></script>
+</head>
+<body>
+<div class="wrap"></div>
+<script>
+// Based on the class 7 test "Zuordnungen & Daten" (EDM 7). Answers: dot or comma both work.
+const prop = { x: [0, 6], y: [0, 12], sx: 1, sy: 1, nolabels: true };
+window.TEST = {
+  key: "mathe-zuordnungen-v1",
+  title: "Zuordnungen",
+  eyebrow: "Mathe · Klasse 7 · EDM 7",
+  subject: "Mathe",
+  intro: "Für Rechnungen kannst du den Notizblock öffnen und mit dem Finger oder dem Apple Pencil schreiben.",
+  questions: [
+    // ---- Teil A ----
+    { part: "Teil A · Zuordnungsart", type: "mc", prompt: "Menge an Erdbeeren (kg) → Gesamtpreis (€)", sub: "Welche Zuordnung ist das?",
+      options: ["proportional", "antiproportional", "weder noch"], answer: 0,
+      hint: "Je mehr Erdbeeren, desto …? Und was passiert mit dem Preis, wenn du doppelt so viel kaufst?",
+      explain: "<p>Je mehr Erdbeeren, desto teurer, und zwar gleichmäßig: doppelte Menge → doppelter Preis. Also <b>proportional</b>.</p>" },
+    { part: "Teil A · Zuordnungsart", type: "mc", prompt: "Anzahl der Helfer → Dauer beim Aufräumen", sub: "Welche Zuordnung ist das? (Alle arbeiten gleich schnell.)",
+      options: ["proportional", "antiproportional", "weder noch"], answer: 1,
+      hint: "Je mehr Helfer, desto … dauert es?",
+      explain: "<p>Je mehr Helfer, desto kürzer. Doppelt so viele Helfer brauchen nur die halbe Zeit. Also <b>antiproportional</b>.</p>" },
+    { part: "Teil A · Zuordnungsart", type: "mc", prompt: "Ein Taxi kostet 3,60 € Grundgebühr plus 1,60 € pro Kilometer.", sub: "Ist Fahrstrecke (km) → Gesamtpreis (€) proportional?",
+      options: ["Ja, proportional", "Nein, nicht proportional"], answer: 1,
+      hint: "Rechne: Was kosten 1 km und 2 km? Ist das Doppelte herausgekommen?",
+      explain: "<p>1 km kostet 5,20 €, 2 km kosten 6,80 €. Das ist <b>nicht</b> das Doppelte. Schuld ist die Grundgebühr: Der Graph startet bei 3,60 € und nicht im Ursprung (0|0).</p>",
+      fig: { x: [0, 6], y: [0, 14], sx: 1, sy: 2, xl: "Strecke (km)", yl: "Preis (€)", fns: [{ f: x => 3.6 + 1.6 * x, from: 0 }], pts: [[0, 3.6, "3,60 €"]] } },
+    { part: "Teil A · Zuordnungsart", type: "mc", prompt: "Quadrat: Seitenlänge a → Flächeninhalt A", sub: "2 cm → 4 cm²; 4 cm → 16 cm². Ist das proportional?",
+      options: ["Ja, proportional", "Nein, nicht proportional"], answer: 1,
+      hint: "Die Seite wird verdoppelt (2 → 4). Wird die Fläche auch nur verdoppelt?",
+      explain: "<p>Doppelte Seite → <b>vierfache</b> Fläche (4 → 16). Bei proportional müsste es genau das Doppelte sein (8 cm²). Also nicht proportional.</p>" },
+    { part: "Teil A · Merksatz", type: "mc", prompt: "Proportional: Verdoppelt (verdreifacht) man die Ausgangsgröße, so … sich die zugeordnete Größe.",
+      options: ["verdoppelt (verdreifacht)", "halbiert (drittelt)", "verändert … nicht"], answer: 0,
+      explain: "<p>Proportional heißt: Beide Größen wachsen im gleichen Verhältnis. ·2 links → ·2 rechts.</p>" },
+    { part: "Teil A · Merksatz", type: "mc", prompt: "Antiproportional: Verdoppelt (verdreifacht) man die Ausgangsgröße, so … sich die zugeordnete Größe.",
+      options: ["verdoppelt (verdreifacht)", "halbiert (drittelt)", "verändert … nicht"], answer: 1,
+      explain: "<p>Antiproportional heißt: ·2 links → :2 rechts. Die eine Größe wird größer, die andere im gleichen Maß kleiner.</p>" },
+    { part: "Teil A · Graphen", type: "mc", prompt: "Welcher Graph gehört zu einer antiproportionalen Zuordnung?",
+      options: [
+        { label: "A", fig: Object.assign({}, prop, { fns: [{ f: x => 2 * x }] }) },
+        { label: "B", fig: Object.assign({}, prop, { fns: [{ f: x => 6 / x, from: 0.3 }] }) },
+        { label: "C", fig: Object.assign({}, prop, { fns: [{ f: x => 3 + 1.2 * x }] }) }
+      ], answer: 1,
+      hint: "Antiproportional: Wird x größer, wird y kleiner.",
+      explain: "<p><b>B</b> ist eine fallende Kurve (Hyperbel), die die Achsen nie berührt: antiproportional. <b>A</b> ist eine Gerade durch den Ursprung: proportional. <b>C</b> beginnt nicht bei (0|0): weder noch.</p>" },
+
+    // ---- Teil B ----
+    { part: "Teil B · Quotientengleichheit", type: "table", prompt: "Müsli: Berechne für jedes Wertepaar den Quotienten y : x.", sub: "Preis in € pro Gramm",
+      table: { head: ["Müsli x (g)", "100", "150", "300", "600"], rows: [["Preis y (€)", "1,40", "2,10", "4,20", "8,40"], ["y : x", { a: 0.014, tol: 0.0001 }, { a: 0.014, tol: 0.0001 }, { a: 0.014, tol: 0.0001 }, { a: 0.014, tol: 0.0001 }]] },
+      hint: "1,40 : 100 = ? (Komma zwei Stellen nach links)",
+      explain: "<p>1,40 : 100 = 0,014 · 2,10 : 150 = 0,014 · 4,20 : 300 = 0,014 · 8,40 : 600 = 0,014. Alle gleich, also <b>quotientengleich → proportional</b>. 1 g kostet 1,4 Cent.</p>" },
+    { part: "Teil B · Quotientengleichheit", type: "table", prompt: "Eintritt: Prüfe auf Quotientengleichheit (y : x).",
+      table: { head: ["Kinder x", "1", "3", "6", "8"], rows: [["Eintritt y (€)", "10,00", "27,00", "54,00", "72,00"], ["y : x", { a: 10 }, { a: 9 }, { a: 9 }, { a: 9 }]] },
+      explain: "<p>10 · 9 · 9 · 9: Die Quotienten sind <b>nicht alle gleich</b>. Also ist die Zuordnung nicht proportional (ab 3 Kindern gibt es wohl Rabatt).</p>" },
+    { part: "Teil B · Quotientengleichheit", type: "mc", prompt: "Ist die Eintritts-Zuordnung aus der letzten Aufgabe proportional?", sub: "Quotienten: 10 · 9 · 9 · 9",
+      options: ["Ja, die Quotienten sind fast gleich", "Nein, nicht alle Quotienten sind gleich"], answer: 1,
+      explain: "<p>Für proportional müssen <b>alle</b> Quotienten genau gleich sein. Fast gleich reicht nicht.</p>" },
+    { part: "Teil B · Produktgleichheit", type: "table", prompt: "Saft abfüllen: Berechne das Produkt x · y.",
+      table: { head: ["Glasgröße x (ml)", "200", "400", "500", "1000"], rows: [["Anzahl Gläser y", "420", "210", "168", "84"], ["x · y", { a: 84000 }, { a: 84000 }, { a: 84000 }, { a: 84000 }]] },
+      hint: "200 · 420: Rechne erst 2 · 42 und hänge dann die Nullen an.",
+      explain: "<p>Jedes Mal 84 000. Alle Produkte gleich, also <b>produktgleich → antiproportional</b>. 84 000 ml = 84 Liter Saft insgesamt.</p>" },
+    { part: "Teil B · Produktgleichheit", type: "mc", prompt: "Wertepaare (x | y): (2|6), (3|4), (4|3), (5|1,5), (6|1).", sub: "Ist die Zuordnung antiproportional?",
+      options: ["Ja, alle Produkte sind 12", "Nein, nicht alle Produkte sind gleich"], answer: 1,
+      hint: "Rechne x · y für jedes Paar, auch für die letzten beiden.",
+      explain: "<p>2·6 = 12, 3·4 = 12, 4·3 = 12, aber 5·1,5 = <b>7,5</b> und 6·1 = <b>6</b>. Also nicht antiproportional.</p>" },
+    { part: "Teil B · Faktor", type: "num", prompt: "Für 3 kg Kirschen bezahlt man 12,60 €.", sub: "Wie groß ist der Proportionalitätsfaktor k = y : x?",
+      answer: 4.2, unit: "€ pro kg", show: "4,20 € pro kg",
+      explain: "<p>k = 12,60 € : 3 kg = <b>4,20 € pro kg</b>. So viel kostet 1 kg.</p>" },
+    { part: "Teil B · Gesamtgröße", type: "num", prompt: "4 Abfüllmaschinen brauchen für einen Auftrag 24 Minuten.", sub: "Wie lange bräuchte 1 Maschine allein?",
+      answer: 96, unit: "Minuten",
+      hint: "Antiproportional: Rechne die Gesamtgröße x · y aus.",
+      explain: "<p>Gesamtgröße: 4 · 24 = 96. Eine Maschine allein braucht <b>96 Minuten</b>.</p>" },
+
+    // ---- Teil C ----
+    { part: "Teil C · Dreisatz", type: "table", prompt: "Ergänze die Dreisatz-Tabelle (proportional).",
+      table: { head: ["Menge", "Preis (€)"], rows: [["3 kg", "12,60"], ["1 kg", { a: 4.2, show: "4,20" }], ["7 kg", { a: 29.4, show: "29,40" }]] },
+      hint: "Erst durch 3 (auf 1 kg), dann mal 7.",
+      explain: "<p>12,60 € : 3 = 4,20 € für 1 kg. 4,20 € · 7 = <b>29,40 €</b> für 7 kg.</p>" },
+    { part: "Teil C · Dreisatz", type: "num", prompt: "3 kg Rasendünger reichen für 450 m² Rasen.", sub: "Wie viel kg braucht man für 600 m²?",
+      answer: 4, unit: "kg",
+      hint: "Wie viele m² schafft 1 kg?",
+      explain: "<p>450 m² : 3 = 150 m² pro kg. 600 m² : 150 m² = <b>4 kg</b>.</p>" },
+    { part: "Teil C · Dreisatz", type: "num", prompt: "375 ml Farblack reichen für 3 m².", sub: "Wie viel Lack braucht man für 10 m²?",
+      answer: 1250, unit: "ml",
+      hint: "Erst auf 1 m² zurückrechnen.",
+      explain: "<p>375 ml : 3 = 125 ml pro m². 125 ml · 10 = <b>1250 ml</b> (= 1,25 Liter).</p>" },
+    { part: "Teil C · Dreisatz", type: "num", prompt: "Ein Futtervorrat reicht für 6 Pferde 20 Tage.", sub: "Wie lange reicht er für 8 Pferde?",
+      answer: 15, unit: "Tage",
+      hint: "Mehr Pferde, weniger Tage: antiproportional. Rechne 6 · 20.",
+      explain: "<p>6 · 20 = 120 „Pferde-Tage“. 120 : 8 = <b>15 Tage</b>.</p>" },
+
+    // ---- Teil D ----
+    { part: "Teil D · Graph zeichnen", type: "plot", prompt: "1 kg Erdbeeren kostet 4 €.", sub: "Trage die Punkte für 1, 2, 3 und 4 kg ein.",
+      table: { head: ["Menge (kg)", "1", "2", "3", "4"], rows: [["Preis (€)", "4", "8", "12", "16"]] },
+      grid: { x: [0, 5], y: [0, 20], sx: 1, sy: 2, xl: "Menge (kg)", yl: "Preis (€)" },
+      points: [[1, 4], [2, 8], [3, 12], [4, 16]], after: { f: x => 4 * x, from: 0, to: 5 },
+      hint: "Für 1 kg: 1 nach rechts, 4 nach oben. Eine Kästchenreihe nach oben sind 2 €.",
+      explain: "<p>Alle Punkte liegen auf einer <b>Geraden durch den Ursprung</b>. Das ist typisch für eine proportionale Zuordnung.</p>" },
+    { part: "Teil D · Graph ablesen", type: "num", prompt: "Der Graph zeigt den Preis für Äpfel.", sub: "Wie viel kosten 6 kg?",
+      fig: { x: [0, 8], y: [0, 12], sx: 1, sy: 1, xl: "Menge (kg)", yl: "Preis (€)", fns: [{ f: x => 1.5 * x }], pts: [[2, 3]] },
+      answer: 9, unit: "€",
+      hint: "Geh bei 6 kg senkrecht nach oben bis zur Geraden, dann waagerecht nach links.",
+      explain: "<p>Bei x = 6 liegt die Gerade bei y = 9. 6 kg kosten <b>9 €</b> (1 kg = 1,50 €).</p>" },
+    { part: "Teil D · Graph ablesen", type: "num", prompt: "Gleicher Apfel-Graph.", sub: "Wie viel kg bekommst du für 12 €?",
+      fig: { x: [0, 8], y: [0, 12], sx: 1, sy: 1, xl: "Menge (kg)", yl: "Preis (€)", fns: [{ f: x => 1.5 * x }], pts: [[2, 3]] },
+      answer: 8, unit: "kg",
+      hint: "Jetzt umgekehrt: Bei 12 € waagerecht nach rechts bis zur Geraden, dann nach unten.",
+      explain: "<p>y = 12 erreicht die Gerade bei x = 8. Für 12 € bekommst du <b>8 kg</b>.</p>" },
+    { part: "Teil D · Kurve zeichnen", type: "plot", prompt: "12 Stück Kuchen werden gerecht verteilt.", sub: "Anzahl Kinder x → Stücke pro Kind y. Trage alle Punkte aus der Tabelle ein.",
+      table: { head: ["Kinder x", "1", "2", "3", "4", "6", "12"], rows: [["Stücke y", "12", "6", "4", "3", "2", "1"]] },
+      grid: { x: [0, 12], y: [0, 12], sx: 1, sy: 1, xl: "Kinder", yl: "Stücke pro Kind", lx: 2, ly: 2 },
+      points: [[1, 12], [2, 6], [3, 4], [4, 3], [6, 2], [12, 1]], after: { f: x => 12 / x, from: 1, to: 12 },
+      explain: "<p>Das Produkt ist immer 12, also antiproportional. Die Punkte liegen auf einer <b>fallenden Kurve (Hyperbel)</b>, nicht auf einer Geraden.</p>" }
+  ]
+};
+</script>
+<script src="../../engine/quiz.js"></script>
+</body>
+</html>

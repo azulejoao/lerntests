@@ -1,0 +1,22 @@
+{
+ "version": "8c02f36187",
+ "built": "16.11.2026 10:42",
+ "tests": [
+  {
+   "path": "tests/schule/englisch-vokabeln-unit1.html",
+   "title": "Vokabeln Unit 1: piano bis rice",
+   "area": "schule",
+   "subject": "Englisch",
+   "desc": "Access 3 · S. 274–276 · 60 Wörter, Deutsch → Englisch, mit Lernkartei",
+   "order": 100
+  },
+  {
+   "path": "tests/schule/mathe-zuordnungen.html",
+   "title": "Mathe: Zuordnungen",
+   "area": "schule",
+   "subject": "Mathe",
+   "desc": "Proportional, antiproportional, Dreisatz, Graphen zeichnen und ablesen · 22 Aufgaben",
+   "order": 10
+  }
+ ]
+}

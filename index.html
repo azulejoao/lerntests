@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="de" data-hub-home>
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lerntests</title>
+<meta name="description" content="Interaktive Lerntests, die ohne Internet funktionieren.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icons/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Lerntests">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="theme-color" content="#1b3a57">
+<!-- Same fonts as the tests: loading them here once stores them for offline use. -->
+<link rel="stylesheet" href="fonts/fonts.css">
+<link rel="stylesheet" href="engine/quiz.css">
+<style>
+.status{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--muted);flex:none}
+.dot.ok{background:var(--good)} .dot.wait{background:var(--signal)}
+.filters{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters .lbl{font-size:13px;color:var(--muted);margin-right:2px}
+.pill{appearance:none;font:600 14px var(--f-body);padding:6px 12px;border-radius:99px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.pill[aria-pressed="true"]{background:var(--sign);border-color:var(--sign);color:var(--sign-fg)}
+section.area{display:flex;flex-direction:column;gap:10px}
+.area-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;border-bottom:2px solid var(--line);padding-bottom:6px}
+.area-head .small{margin:0}
+.subj{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:700;margin-top:6px}
+.tests{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px}
+a.test{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit;background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:14px 16px;border-left:6px solid var(--sign)}
+a.test:hover{border-color:var(--muted);border-left-color:var(--signal)}
+a.test b{font-family:var(--f-display);font-size:18px;line-height:1.2}
+a.test .last{font-size:13px;font-weight:700;color:var(--good)}
+a.test .last.none{color:var(--muted);font-weight:400}
+.empty{background:var(--surface);border:1.5px dashed var(--line);border-radius:12px;padding:14px 16px;color:var(--muted);font-size:14px}
+details.help{background:var(--surface);border:1.5px solid var(--line);border-radius:12px;padding:12px 16px;font-size:14px}
+details.help summary{cursor:pointer;font-weight:700}
+details.help ol{margin:8px 0 0;padding-left:20px}
+</style>
+<script src="hub.js"></script>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="eyebrow">Funktioniert auch ohne Internet</span>
+    <h1>Lerntests</h1>
+  </header>
+  <div class="status" id="status"><span class="dot wait" id="dot"></span><span id="statusText">Wird für offline vorbereitet …</span></div>
+  <div class="filters" id="filters"><span class="lbl">Auf diesem Gerät zeigen:</span></div>
+  <div id="list" style="display:flex;flex-direction:column;gap:22px;width:100%"></div>
+  <details class="help">
+    <summary>Auf iPhone, iPad oder Mac installieren</summary>
+    <ol>
+      <li>Diese Seite einmal mit Internet in Safari öffnen.</li>
+      <li>iPhone / iPad: Teilen-Knopf → <b>Zum Home-Bildschirm</b>. Mac: Ablage → <b>Zum Dock hinzufügen</b>.</li>
+      <li>Ab dann das Symbol „Lerntests“ benutzen. Wenn oben „Offline bereit“ steht, gehen alle Tests ohne Internet.</li>
+      <li>Neue Tests kommen automatisch, sobald das Gerät wieder online ist und die App geöffnet wird.</li>
+    </ol>
+  </details>
+</div>
+<script>
+const AREAS = [
+  { id: "schule", name: "Schule", note: "Klasse 7" },
+  { id: "sprachen", name: "Sprachen", note: "English · Português · Español" }
+];
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const get = (k, d) => { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch (e) { return d; } };
+const set = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
+let shown = get("hub:areas", AREAS.map(a => a.id));
+let DATA = { tests: [] };
+
+function renderFilters() {
+  const f = $("#filters");
+  f.querySelectorAll(".pill").forEach(p => p.remove());
+  AREAS.forEach(a => {
+    const b = document.createElement("button");
+    b.className = "pill"; b.textContent = a.name; b.setAttribute("aria-pressed", shown.includes(a.id));
+    b.addEventListener("click", () => {
+      shown = shown.includes(a.id) ? shown.filter(x => x !== a.id) : shown.concat(a.id);
+      if (!shown.length) shown = [a.id];
+      set("hub:areas", shown); renderFilters(); renderList();
+    });
+    f.appendChild(b);
+  });
+}
+function lastText(path) {
+  const r = get("hub:last:" + path, null);
+  if (!r || !r.m) return '<span class="last none">Noch nicht gemacht</span>';
+  const pct = Math.round(100 * r.p / r.m), d = new Date(r.t);
+  return '<span class="last">Zuletzt: ' + pct + ' % · ' + d.toLocaleDateString("de-DE", { day: "2-digit", month: "2-digit" }) + "</span>";
+}
+function renderList() {
+  const L = $("#list"); L.innerHTML = "";
+  AREAS.filter(a => shown.includes(a.id)).forEach(a => {
+    const tests = DATA.tests.filter(t => t.area === a.id);
+    let h = '<section class="area"><div class="area-head"><h2>' + esc(a.name) + "</h2>" + (a.note ? '<p class="small">' + esc(a.note) + "</p>" : "") + "</div>";
+    if (!tests.length) h += '<div class="empty">' + esc(a.empty || "Noch keine Tests.") + '</div>';
+    const subjects = [...new Set(tests.map(t => t.subject))];
+    subjects.forEach(s => {
+      if (s) h += '<div class="subj">' + esc(s) + "</div>";
+      h += '<div class="tests">' + tests.filter(t => t.subject === s).map(t =>
+        '<a class="test" href="' + esc(t.path) + '"><b>' + esc(t.title) + "</b>" + (t.desc ? '<span class="small">' + esc(t.desc) + "</span>" : "") + lastText(t.path) + "</a>").join("") + "</div>";
+    });
+    L.insertAdjacentHTML("beforeend", h + "</section>");
+  });
+}
+function status(ok, text) { $("#dot").className = "dot " + (ok ? "ok" : "wait"); $("#statusText").textContent = text; }
+
+async function checkOffline() {
+  if (!("serviceWorker" in navigator) || !window.caches) return status(false, "Dieser Browser kann die Tests nicht offline speichern.");
+  try {
+    await navigator.serviceWorker.ready;
+    const keys = await caches.keys();
+    if (DATA.version && keys.includes("lerntests-" + DATA.version)) status(true, "Offline bereit · Stand " + DATA.built + " · " + DATA.tests.length + " Tests");
+    else setTimeout(checkOffline, 1500);
+  } catch (e) { status(false, "Offline-Speicher nicht verfügbar."); }
+}
+
+renderFilters();
+fetch("tests.json", { cache: "no-cache" }).then(r => r.json()).catch(() => caches.match("tests.json").then(r => r && r.json()))
+  .then(d => { if (d) DATA = d; renderList(); checkOffline(); })
+  .catch(() => { renderList(); status(false, "Testliste nicht gefunden."); });
+if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("controllerchange", () => setTimeout(checkOffline, 300));
+window.addEventListener("pageshow", renderList);   // refresh "last score" when coming back from a test
+</script>
+</body>
+</html>
