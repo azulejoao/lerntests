@@ -1,6 +1,6 @@
 {
- "version": "cf3f65090e",
- "built": "16.11.2026 10:44",
+ "version": "6bf2e45f72",
+ "built": "16.11.2026 10:49",
  "tests": [
   {
    "path": "tests/kl7/englisch-vokabeln-unit1.html",
@@ -9,6 +9,14 @@
    "subject": "Englisch",
    "desc": "Access 3 · S. 274–276 · 60 Wörter, Deutsch → Englisch, mit Lernkartei",
    "order": 100
+  },
+  {
+   "path": "tests/kl7/erdkunde-global-grid-seasons.html",
+   "title": "Global Grid & Seasons | Geography Test",
+   "area": "kl7",
+   "subject": "Erdkunde BiLi",
+   "desc": "English vocabulary, global grid, rotation, coordinates and seasons · 89 questions",
+   "order": 20
   },
   {
    "path": "tests/kl7/mathe-zuordnungen.html",
