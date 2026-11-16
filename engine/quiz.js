@@ -115,6 +115,12 @@ function graphSVG(G, extra) {
   if (g.xl && !g.small) s += '<text class="g-lab" text-anchor="end" x="' + (G.W - G.r) + '" y="' + (G.H - 6) + '">' + esc(g.xl) + "</text>";
   if (g.yl && !g.small) s += '<text class="g-lab" text-anchor="start" x="' + 4 + '" y="' + 14 + '">' + esc(g.yl) + "</text>";
   s += '<g clip-path="url(#' + G.id + ')">';
+  // land: true draws the continents behind the grid (x = longitude, y = latitude), for marking places and lines on a world map
+  if (g.land && window.LAND) {
+    let d = "";
+    window.LAND.forEach(ring => { for (let i = 0; i < ring.length; i += 2) d += (i ? "L" : "M") + G.X(ring[i]).toFixed(1) + " " + G.Y(ring[i + 1]).toFixed(1); d += "Z"; });
+    s += '<path class="g-land" d="' + d + '"/>';
+  }
   (g.help || []).forEach(([x, y]) => { s += '<path class="g-help" d="M' + G.X(x) + " " + ax + "V" + G.Y(y) + "H" + ay + '"/>'; });
   (g.fns || []).forEach(fn => { s += '<path class="g-fn ' + (fn.cls || "") + '" d="' + fnPath(G, fn.f, fn.from, fn.to) + '"/>'; });
   s += "</g>";
@@ -125,7 +131,13 @@ function graphSVG(G, extra) {
   (g.labels || []).forEach(([x, y, t]) => { s += '<text class="g-lab" x="' + G.X(x) + '" y="' + G.Y(y) + '">' + esc(t) + "</text>"; });
   return s + (extra || "") + "</svg>";
 }
-const graph = g => graphSVG(geom(g));
+// A figure is a graph, an animated scene ({scene: "globe", …}, see scenes.js) or a picture ({img, alt, caption}).
+function graph(g) {
+  if (g.scene) return window.Scenes ? Scenes.html(g, T.ui === "en" ? "en" : (T.sceneLang || "de")) : "";
+  if (g.img) return '<figure class="scene-box"><img class="fig-img" src="' + esc(g.img) + '" alt="' + esc(g.alt || "") + '">' + (g.caption ? "<figcaption>" + g.caption + "</figcaption>" : "") + "</figure>";
+  return graphSVG(geom(g));
+}
+const mount = () => { if (window.Scenes) Scenes.mount(app); };
 
 // ---------- tables ----------
 function tableHTML(tb, live) {
@@ -206,6 +218,7 @@ function render() {
     if (!TOUCH) try { $("#answer").focus({ preventScroll: true }); } catch (e) {}
   } else if (q.type === "table") A.innerHTML = tableHTML(q.table, true);
   else if (q.type === "plot") renderPlot(q, A);
+  mount();
 }
 
 function renderMC(q, A) {
@@ -327,8 +340,10 @@ function finish(ok, given, how) {
   if (q.type === "plot" && ok) drawUser({ ok: new Set(Q.user.keys()), after: q.after });
   if (q.type === "num" || q.type === "text") { $("#answer").disabled = true; }
   if (q.explain) body += '<div class="explain">' + q.explain + "</div>";
+  if (q.explainFig) body += '<div class="figure">' + graph(q.explainFig) + "</div>";
   const fb = $("#fb"); fb.hidden = false; fb.className = "fb " + (ok ? "good" : "bad");
   fb.innerHTML = '<span class="verdict">' + head + "</span>" + body;
+  mount();
   $("#checkBtn").hidden = true; $("#hintBtn").hidden = true; $("#skipBtn").hidden = true; $("#nextBtn").hidden = false;
   $("#pts").textContent = ptsText(S.pts);
   try { $("#nextBtn").focus({ preventScroll: true }); } catch (e) {}

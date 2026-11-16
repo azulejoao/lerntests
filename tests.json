@@ -1,6 +1,6 @@
 {
- "version": "9ee420ff56",
- "built": "16.11.2026 14:28",
+ "version": "2a9dcbfebe",
+ "built": "16.11.2026 14:58",
  "tests": [
   {
    "path": "tests/kl7/englisch-vokabeln-unit1.html",
@@ -9,6 +9,14 @@
    "subject": "Englisch",
    "desc": "Access 3 · S. 274–276 · 60 Wörter, Deutsch → Englisch, mit Lernkartei",
    "order": 100
+  },
+  {
+   "path": "tests/kl7/erdkunde-vulcanoes-earthquakes.html",
+   "title": "Volcanoes & Earthquakes | Geography Test",
+   "area": "kl7",
+   "subject": "Erdkunde BiLi",
+   "desc": "Tectonic plates, earthquakes, volcanoes, tsunamis and English vocabulary · 125 questions",
+   "order": 15
   },
   {
    "path": "tests/kl7/erdkunde-global-grid-seasons.html",

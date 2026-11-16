@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scenes catalogue</title>
+<link rel="stylesheet" href="../fonts/fonts.css">
+<link rel="stylesheet" href="quiz.css">
+<style>.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px}.grid code{font-size:12px;color:var(--muted);display:block;white-space:pre-wrap;word-break:break-word}</style>
+</head>
+<body>
+<div class="wrap" style="max-width:1100px">
+  <header><span class="eyebrow">Engine reference</span><h1>Scenes catalogue</h1><p class="small">Every animated picture a test can use. Tap a picture to pause it. The code under each one is what goes into <code style="display:inline">fig</code>.</p></header>
+  <div class="grid" id="g"></div>
+</div>
+<script src="land.js"></script>
+<script src="scenes.js"></script>
+<script>
+const S = [
+  { scene: "globe", lines: ["equator", "tropics", "polar"], band: "tropics", caption: "Turning globe, tropics shaded" },
+  { scene: "globe", lines: ["equator", "meridian", "grid"], hl: "pm", marks: [{ lat: 51.5, lon: 0, label: "Greenwich" }, { lat: 48.1, lon: 11.6, label: "Munich" }], caption: "Grid, prime meridian, places" },
+  { scene: "globe", sun: "left", tilt: 23.5, rays: true, lines: ["equator", "tropics", "polar"], deg: true, spin: 25, caption: "21 June: the Sun is overhead at the Tropic of Cancer" },
+  { scene: "orbit", caption: "The Earth goes round the Sun, the axis always leans the same way" },
+  { scene: "rays", year: true, spread: true, caption: "Where the Sun is overhead through the year" },
+  { scene: "plates", kind: "subduction" },
+  { scene: "plates", kind: "divergent" },
+  { scene: "plates", kind: "collision" },
+  { scene: "plates", kind: "transform" },
+  { scene: "volcano" },
+  { scene: "quake" },
+  { scene: "tsunami" },
+  { scene: "flow", nodes: [{ id: "e", label: "Endoscope", color: 2 }, { id: "c", label: "Camera head", color: 2 }, { id: "k", label: "Camera controller", color: 1 }, { id: "m", label: "Monitor", color: 1 }, { id: "l", label: "Light source", color: 5 }, { id: "f", label: "Light cable", color: 5 }],
+    links: [{ from: "e", to: "c", label: "image" }, { from: "c", to: "k" }, { from: "k", to: "m" }, { from: "l", to: "f", label: "light" }, { from: "f", to: "e" }], caption: "System as boxes and arrows" }
+];
+const g = document.getElementById("g");
+S.forEach(s => {
+  const d = document.createElement("div");
+  d.innerHTML = Scenes.html(s, "en") + "<code>" + JSON.stringify(s).replace(/</g, "&lt;") + "</code>";
+  g.appendChild(d);
+});
+Scenes.mount(document);
+</script>
+</body>
+</html>

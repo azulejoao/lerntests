@@ -1,9 +1,10 @@
 // Offline worker. build.py fills in VERSION and FILES and writes it as sw.js.
 // Every file of the site is stored on the device at install, so all tests work without internet.
-const VERSION = "9ee420ff56";
-const FILES = ["./", "engine/quiz.css", "engine/quiz.js", "fonts/AtkinsonHyperlegible-400-latin-ext.woff2", "fonts/AtkinsonHyperlegible-400-latin.woff2", "fonts/AtkinsonHyperlegible-700-latin-ext.woff2", "fonts/AtkinsonHyperlegible-700-latin.woff2", "fonts/BricolageGrotesque-600-latin-ext.woff2", "fonts/BricolageGrotesque-600-latin.woff2", "fonts/BricolageGrotesque-800-latin-ext.woff2", "fonts/BricolageGrotesque-800-latin.woff2", "fonts/NotoSans-400-latin-ext.woff2", "fonts/NotoSans-400-latin.woff2", "fonts/NotoSans-500-latin-ext.woff2", "fonts/NotoSans-500-latin.woff2", "fonts/fonts.css", "hub.js", "icons/apple-touch-icon.png", "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png", "index.html", "manifest.webmanifest", "tests.json", "tests/kl7/englisch-vokabeln-unit1.html", "tests/kl7/erdkunde-global-grid-seasons.html", "tests/kl7/mathe-zuordnungen.html"];
-const CACHE = "lerntests-" + VERSION;
-const FONTS = "lerntests-fonts";
+const VERSION = "2a9dcbfebe";
+const FILES = ["./", "engine/land.js", "engine/quiz.css", "engine/quiz.js", "engine/scenes-demo.html", "engine/scenes.js", "fonts/AtkinsonHyperlegible-400-latin-ext.woff2", "fonts/AtkinsonHyperlegible-400-latin.woff2", "fonts/AtkinsonHyperlegible-700-latin-ext.woff2", "fonts/AtkinsonHyperlegible-700-latin.woff2", "fonts/BricolageGrotesque-600-latin-ext.woff2", "fonts/BricolageGrotesque-600-latin.woff2", "fonts/BricolageGrotesque-800-latin-ext.woff2", "fonts/BricolageGrotesque-800-latin.woff2", "fonts/NotoSans-400-latin-ext.woff2", "fonts/NotoSans-400-latin.woff2", "fonts/NotoSans-500-latin-ext.woff2", "fonts/NotoSans-500-latin.woff2", "fonts/fonts.css", "hub.js", "icons/apple-touch-icon.png", "icons/icon-192.png", "icons/icon-512.png", "icons/icon-maskable-512.png", "index.html", "manifest.webmanifest", "tests.json", "tests/kl7/englisch-vokabeln-unit1.html", "tests/kl7/erdkunde-global-grid-seasons.html", "tests/kl7/erdkunde-vulcanoes-earthquakes.html", "tests/kl7/mathe-zuordnungen.html"];
+const PREFIX = "lerntests-";              // "lerntests-" or "academy-": each app keeps its own store
+const CACHE = PREFIX + VERSION;
+const FONTS = PREFIX + "fonts";
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES.map(f => new Request(f, { cache: "reload" })))).then(() => self.skipWaiting()));
@@ -11,7 +12,7 @@ self.addEventListener("install", e => {
 
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys()
-    .then(keys => Promise.all(keys.filter(k => k.startsWith("lerntests-") && k !== CACHE && k !== FONTS).map(k => caches.delete(k))))
+    .then(keys => Promise.all(keys.filter(k => k.startsWith(PREFIX) && k !== CACHE && k !== FONTS).map(k => caches.delete(k))))
     .then(() => self.clients.claim()));
 });
 
