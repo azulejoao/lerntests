@@ -125,7 +125,14 @@ renderFilters();
 fetch("tests.json", { cache: "no-cache" }).then(r => r.json()).catch(() => caches.match("tests.json").then(r => r && r.json()))
   .then(d => { if (d) DATA = d; renderList(); checkOffline(); })
   .catch(() => { renderList(); status(false, "Testliste nicht gefunden."); });
-if ("serviceWorker" in navigator) navigator.serviceWorker.addEventListener("controllerchange", () => setTimeout(checkOffline, 300));
+// A new version was just stored: reload the overview once so new and changed tests show right away.
+if ("serviceWorker" in navigator) {
+  const hadVersion = !!navigator.serviceWorker.controller;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    let done = false; try { done = sessionStorage.getItem("hub:reloaded") === "1"; sessionStorage.setItem("hub:reloaded", "1"); } catch (e) {}
+    if (hadVersion && !done) location.reload(); else setTimeout(checkOffline, 300);
+  });
+}
 window.addEventListener("pageshow", renderList);   // refresh "last score" when coming back from a test
 </script>
 </body>
