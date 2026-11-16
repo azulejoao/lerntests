@@ -13,6 +13,20 @@ const store = {
   del(k) { try { localStorage.removeItem(k); } catch (e) {} }
 };
 const KEY = "quiz:" + T.key;
+// English interface for bilingual subjects (BiLi) and English tests: set ui: "en" in window.TEST.
+const EN = {
+  check: "Check", next: "Next", hint: "Hint", skip: "I don't know", pad: "Notepad", clear: "Clear",
+  points: "points", right: "Correct!", wrong: "Not quite.", again: "Not right yet. Try again.",
+  againHint: "Not right yet. Look at the hint and try again.",
+  tableAgain: "The red fields are not right yet. Correct them.",
+  plotAgain: "The red points are wrong or some points are missing. Tap a point to remove it.",
+  solution: "Answer", yours: "Your answer", accent: "Correct, but check the accents:", typo: "Almost, check the spelling:",
+  plotHelp: "Tap the crossing points of the grid to set points.", plotClear: "Clear points",
+  endEyebrow: "Test finished", redo: "Practise mistakes", restart: "Start again", allAgain: "Do it all again",
+  practise: "Practise these", resumed: "You are continuing where you stopped.", listen: "Listen",
+  placeholder: "Type your answer …", ofFirst: "right on the first try", of: "of", sure: "Sure? Your progress will be lost.",
+  grades: ["Excellent!", "Very good!", "Well done!", "Keep practising, you can do it!", "Practice makes perfect. Try again with hints!"]
+};
 const L = Object.assign({
   check: "Prüfen", next: "Weiter", hint: "Tipp", skip: "Weiß ich nicht", pad: "Notizblock", clear: "Löschen",
   points: "Punkte", right: "Richtig!", wrong: "Leider falsch.", again: "Noch nicht richtig. Versuch es nochmal.",
@@ -23,8 +37,9 @@ const L = Object.assign({
   plotHelp: "Tippe auf die Kreuzungspunkte im Gitter, um Punkte zu setzen.", plotClear: "Punkte löschen",
   endEyebrow: "Test geschafft", redo: "Fehler wiederholen", restart: "Von vorn beginnen", allAgain: "Nochmal alles",
   practise: "Das solltest du noch üben", resumed: "Du machst da weiter, wo du aufgehört hast.", listen: "Anhören",
-  placeholder: "Antwort eingeben …", ofFirst: "beim ersten Versuch richtig", of: "von"
-}, T.labels || {});
+  placeholder: "Antwort eingeben …", ofFirst: "beim ersten Versuch richtig", of: "von", sure: "Wirklich? Dein Stand geht verloren.",
+  grades: ["Hervorragend!", "Sehr gut!", "Gut gemacht!", "Weiter üben, du schaffst das!", "Übung macht den Meister. Nochmal mit Tipps!"]
+}, T.ui === "en" ? EN : {}, T.labels || {});
 const TOUCH = (() => { try { return matchMedia("(hover: none) and (pointer: coarse)").matches; } catch (e) { return false; } })();
 
 // ---------- numbers ----------
@@ -329,7 +344,7 @@ function renderEnd() {
   $("#qcard").hidden = true; $("#endcard").hidden = false; $("#barfill").style.width = "100%";
   const ids = Object.keys(S.first).map(Number), right = ids.filter(i => S.first[i]).length, miss = ids.filter(i => !S.first[i]);
   const pct = S.max ? Math.round(100 * S.pts / S.max) : 0;
-  const grade = pct >= 92 ? "Hervorragend!" : pct >= 80 ? "Sehr gut!" : pct >= 65 ? "Gut gemacht!" : pct >= 50 ? "Weiter üben, du schaffst das!" : "Übung macht den Meister. Nochmal mit Tipps!";
+  const grade = L.grades[pct >= 92 ? 0 : pct >= 80 ? 1 : pct >= 65 ? 2 : pct >= 50 ? 3 : 4];
   let h = '<span class="eyebrow">' + esc(L.endEyebrow) + '</span><div class="big">' + pct + " %</div>" +
     '<p style="margin:0"><b>' + esc(T.grades ? T.grades(pct) : grade) + "</b> " + right + " " + L.of + " " + ids.length + " " + L.ofFirst + ", " + fmt(S.pts) + " " + L.of + " " + ptsText(S.max) + ".</p>";
   if (miss.length) h += "<h2>" + esc(L.practise) + '</h2><ul class="miss">' + miss.map(i => "<li>" + esc(strip(QS[i].prompt).slice(0, 110)) + "</li>").join("") + "</ul>";
@@ -380,7 +395,7 @@ $("#hintBtn").addEventListener("click", showHint);
 $("#restart").addEventListener("click", e => {
   const b = e.currentTarget;
   if (b.dataset.armed) { delete b.dataset.armed; b.textContent = L.restart; newRun(); }
-  else { b.dataset.armed = "1"; b.textContent = "Wirklich? Dein Stand geht verloren."; setTimeout(() => { if (b.dataset.armed) { delete b.dataset.armed; b.textContent = L.restart; } }, 4000); }
+  else { b.dataset.armed = "1"; b.textContent = L.sure; setTimeout(() => { if (b.dataset.armed) { delete b.dataset.armed; b.textContent = L.restart; } }, 4000); }
 });
 document.addEventListener("click", e => { const b = e.target.closest("[data-say]"); if (b) say(b.dataset.say); });
 document.addEventListener("keydown", e => {
