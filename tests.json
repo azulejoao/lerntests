@@ -1,6 +1,6 @@
 {
- "version": "6bf2e45f72",
- "built": "16.11.2026 10:49",
+ "version": "ea159a70a4",
+ "built": "16.11.2026 11:41",
  "tests": [
   {
    "path": "tests/kl7/englisch-vokabeln-unit1.html",
@@ -15,7 +15,7 @@
    "title": "Global Grid & Seasons | Geography Test",
    "area": "kl7",
    "subject": "Erdkunde BiLi",
-   "desc": "English vocabulary, global grid, rotation, coordinates and seasons · 89 questions",
+   "desc": "English vocabulary, global grid, solstices and time zones · 120 questions",
    "order": 20
   },
   {
