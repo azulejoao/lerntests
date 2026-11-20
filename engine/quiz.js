@@ -25,6 +25,8 @@ const EN = {
   endEyebrow: "Test finished", redo: "Practise mistakes", restart: "Start again", allAgain: "Do it all again",
   practise: "Practise these", resumed: "You are continuing where you stopped.", listen: "Listen",
   placeholder: "Type your answer …", ofFirst: "right on the first try", of: "of", sure: "Sure? Your progress will be lost.",
+  learnEyebrow: "Learn first", learnGo: "Start the test", learnBack: "Learning part", hideTr: "Cover translation", showTr: "Show translation",
+  words: "Words", phrases: "Phrases", dialog: "In a conversation", tapReveal: "Tap a covered line to see it.",
   grades: ["Excellent!", "Very good!", "Well done!", "Keep practising, you can do it!", "Practice makes perfect. Try again with hints!"]
 };
 const L = Object.assign({
@@ -38,6 +40,8 @@ const L = Object.assign({
   endEyebrow: "Test geschafft", redo: "Fehler wiederholen", restart: "Von vorn beginnen", allAgain: "Nochmal alles",
   practise: "Das solltest du noch üben", resumed: "Du machst da weiter, wo du aufgehört hast.", listen: "Anhören",
   placeholder: "Antwort eingeben …", ofFirst: "beim ersten Versuch richtig", of: "von", sure: "Wirklich? Dein Stand geht verloren.",
+  learnEyebrow: "Erst lernen, dann testen", learnGo: "Zum Test", learnBack: "Lernteil", hideTr: "Übersetzung verdecken", showTr: "Übersetzung zeigen",
+  words: "Vokabeln", phrases: "Redewendungen", dialog: "So klingt es im Gespräch", tapReveal: "Tippe eine verdeckte Zeile an, um sie zu sehen.",
   grades: ["Hervorragend!", "Sehr gut!", "Gut gemacht!", "Weiter üben, du schaffst das!", "Übung macht den Meister. Nochmal mit Tipps!"]
 }, T.ui === "en" ? EN : {}, T.labels || {});
 const TOUCH = (() => { try { return matchMedia("(hover: none) and (pointer: coarse)").matches; } catch (e) { return false; } })();
@@ -179,6 +183,45 @@ app.innerHTML =
   "</div></article>" +
   '<article class="card" id="endcard" hidden><div class="body end" id="endbody"></div></article>' +
   '<div><button class="btn ghost" id="restart">' + esc(L.restart) + "</button></div>";
+
+// ---------- learning part (optional): window.TEST.learn = [{title, intro, words, phrases, dialog, tip}] ----------
+// words / phrases: [[foreign, German, note?]]; dialog: [[who, foreign, German]]. Shown before the test; the test has a button back to it.
+const TEST_PARTS = ["#pos", "#qcard", "#endcard", "#restart"].map(s => $(s)).map(el => el.closest(".progress") || (el.id === "restart" ? el.parentElement : el));
+const learnBox = document.createElement("div"); learnBox.id = "learn"; learnBox.className = "learn"; learnBox.hidden = true;
+app.querySelector("header").after(learnBox);
+const sayBtn = t => T.speech ? '<button class="say" data-say="' + esc(strip(t)) + '" aria-label="' + esc(L.listen) + '">🔊</button>' : "";
+const lrows = list => '<table class="learn-t"><tbody>' + list.map(r => '<tr><td class="fx">' + r[0] + sayBtn(r[0]) + (r[2] ? "<small>" + r[2] + "</small>" : "") + '</td><td class="tr">' + r[1] + "</td></tr>").join("") + "</tbody></table>";
+function learnHTML() {
+  const top = '<div class="learn-bar"><button class="btn primary" data-go="test">' + esc(L.learnGo) + ' →</button><button class="btn ghost" id="hideTr" aria-pressed="false">' + esc(L.hideTr) + "</button></div>";
+  let h = '<span class="eyebrow">' + esc(L.learnEyebrow) + "</span>" + top;
+  T.learn.forEach((s, i) => {
+    h += '<details class="card learn-sec"' + (i === 0 ? " open" : "") + '><summary><span class="ln">' + (i + 1) + "</span>" + esc(s.title) + '</summary><div class="body">';
+    if (s.intro) h += "<p>" + s.intro + "</p>";
+    if (s.words && s.words.length) h += "<h3>" + esc(L.words) + "</h3>" + lrows(s.words);
+    if (s.phrases && s.phrases.length) h += "<h3>" + esc(L.phrases) + "</h3>" + lrows(s.phrases);
+    if (s.dialog && s.dialog.length) h += "<h3>" + esc(L.dialog) + '</h3><div class="dialog">' + s.dialog.map(d => '<div class="dl"><b>' + esc(d[0]) + '</b><div><div class="fx">' + d[1] + sayBtn(d[1]) + '</div><div class="tr">' + d[2] + "</div></div></div>").join("") + "</div>";
+    if (s.tip) h += '<p class="learn-tip">' + s.tip + "</p>";
+    h += "</div></details>";
+  });
+  return h + '<div class="learn-bar"><button class="btn primary" data-go="test">' + esc(L.learnGo) + " →</button></div>";
+}
+function showLearn(on) {
+  learnBox.hidden = !on; TEST_PARTS.forEach(el => { if (el) el.hidden = on; });
+  $("#resumed").hidden = true;
+  if (!on) { if (S) render(); else newRun(); }
+  window.scrollTo({ top: 0 });
+}
+if (T.learn && T.learn.length) {
+  learnBox.innerHTML = learnHTML();
+  const back = document.createElement("button"); back.className = "btn ghost"; back.textContent = "← " + L.learnBack;
+  back.addEventListener("click", () => showLearn(true)); $("#restart").before(back); $("#restart").parentElement.style.cssText = "display:flex;gap:8px;flex-wrap:wrap";
+  learnBox.addEventListener("click", e => {
+    if (e.target.closest("[data-go]")) return showLearn(false);
+    const hb = e.target.closest("#hideTr");
+    if (hb) { const on = !learnBox.classList.contains("hide-tr"); learnBox.classList.toggle("hide-tr", on); hb.setAttribute("aria-pressed", on); hb.textContent = on ? L.showTr : L.hideTr; learnBox.querySelectorAll(".tr.shown").forEach(x => x.classList.remove("shown")); return; }
+    const tr = e.target.closest(".tr"); if (tr && learnBox.classList.contains("hide-tr")) tr.classList.toggle("shown");
+  });
+}
 
 const QS = T.questions;
 let S, Q;
@@ -422,5 +465,6 @@ document.addEventListener("keydown", e => {
 
 const saved = store.get(KEY + ":state", null);
 if (saved && saved.n === QS.length && saved.i < saved.order.length && saved.i > 0) { S = saved; $("#resumed").hidden = false; render(); }
+else if (T.learn && T.learn.length) showLearn(true);
 else newRun();
 })();

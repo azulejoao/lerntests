@@ -1,7 +1,15 @@
 {
- "version": "2a9dcbfebe",
- "built": "16.11.2026 14:58",
+ "version": "160c6f29c4",
+ "built": "20.11.2026 03:19",
  "tests": [
+  {
+   "path": "tests/kl7/biologie-wirbellose.html",
+   "title": "Biologie · Regenwurm, Schnecke und Biene",
+   "area": "kl7",
+   "subject": "Biologie",
+   "desc": "Regenwurm S. 24–26 · Weinbergschnecke S. 28–30 · Honigbiene S. 32–33 · 18 Fragen",
+   "order": 20
+  },
   {
    "path": "tests/kl7/englisch-vokabeln-unit1.html",
    "title": "Vokabeln Unit 1: piano bis rice",
