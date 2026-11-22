@@ -15,7 +15,7 @@ const store = {
 const KEY = "quiz:" + T.key;
 // English interface for bilingual subjects (BiLi) and English tests: set ui: "en" in window.TEST.
 const EN = {
-  check: "Check", next: "Next", hint: "Hint", skip: "I don't know", pad: "Notepad", clear: "Clear",
+  check: "Check", next: "Next", hint: "Hint", skip: "I don't know", pad: "Write or draw here · Apple Pencil / finger", clear: "Erase page", undo: "Undo", printBlank: "Print blank test", printKey: "Print answer key", printWork: "Print my work", selfYes: "My answer fits", selfNo: "Practise again",
   points: "points", right: "Correct!", wrong: "Not quite.", again: "Not right yet. Try again.",
   againHint: "Not right yet. Look at the hint and try again.",
   tableAgain: "The red fields are not right yet. Correct them.",
@@ -30,7 +30,7 @@ const EN = {
   grades: ["Excellent!", "Very good!", "Well done!", "Keep practising, you can do it!", "Practice makes perfect. Try again with hints!"]
 };
 const L = Object.assign({
-  check: "Prüfen", next: "Weiter", hint: "Tipp", skip: "Weiß ich nicht", pad: "Notizblock", clear: "Löschen",
+  check: "Prüfen", next: "Weiter", hint: "Tipp", skip: "Weiß ich nicht", pad: "Direkt hier schreiben oder zeichnen · Apple Pencil / Finger", clear: "Seite leeren", undo: "Rückgängig", printBlank: "Leeren Test drucken", printKey: "Lösungsblatt drucken", printWork: "Meine Antworten drucken", selfYes: "Meine Antwort passt", selfNo: "Noch üben",
   points: "Punkte", right: "Richtig!", wrong: "Leider falsch.", again: "Noch nicht richtig. Versuch es nochmal.",
   againHint: "Noch nicht richtig. Schau dir den Tipp an und versuch es nochmal.",
   tableAgain: "Die roten Felder stimmen noch nicht. Verbessere sie.",
@@ -45,6 +45,7 @@ const L = Object.assign({
   grades: ["Hervorragend!", "Sehr gut!", "Gut gemacht!", "Weiter üben, du schaffst das!", "Übung macht den Meister. Nochmal mit Tipps!"]
 }, T.ui === "en" ? EN : {}, T.labels || {});
 const TOUCH = (() => { try { return matchMedia("(hover: none) and (pointer: coarse)").matches; } catch (e) { return false; } })();
+if (T.subject) document.body.dataset.subject = T.subject.toLowerCase();
 
 // ---------- numbers ----------
 function parseNum(s) {
@@ -175,18 +176,19 @@ app.innerHTML =
   '<article class="card" id="qcard"><div class="sign"><div class="meta"><span class="chip" id="c-part"></span></div><div class="prompt" id="prompt"></div></div>' +
   '<div class="edge" aria-hidden="true"></div><div class="body">' +
   '<div class="figure" id="fig" hidden></div><div id="info" hidden></div><div id="area"></div>' +
-  '<div class="pad" id="pad" hidden><canvas></canvas><button class="btn" id="padClear">' + esc(L.clear) + "</button></div>" +
+  '<section class="pad" id="pad" aria-label="' + esc(L.pad) + '"><div class="pad-head"><span>✎ ' + esc(L.pad) + '</span><div><button class="btn ghost" type="button" id="padUndo">' + esc(L.undo) + '</button><button class="btn ghost" type="button" id="padClear">' + esc(L.clear) + '</button></div></div><canvas aria-label="' + esc(L.pad) + '"></canvas></section>' +
   '<div class="hintbox" id="hintbox" hidden></div><div class="fb" id="fb" hidden></div>' +
-  '<div class="actions"><button class="btn ghost" id="padBtn" style="margin-right:auto">' + esc(L.pad) + "</button>" +
-  '<button class="btn" id="hintBtn">' + esc(L.hint) + '</button><button class="btn ghost" id="skipBtn">' + esc(L.skip) + "</button>" +
+  '<div class="actions"><button class="btn" id="hintBtn">' + esc(L.hint) + '</button><button class="btn ghost" id="skipBtn">' + esc(L.skip) + "</button>" +
   '<button class="btn primary" id="checkBtn">' + esc(L.check) + '</button><button class="btn primary" id="nextBtn" hidden>' + esc(L.next) + "</button></div>" +
   "</div></article>" +
   '<article class="card" id="endcard" hidden><div class="body end" id="endbody"></div></article>' +
+  '<div class="print-tools"><span>' + (T.ui === "en" ? "Print or save as PDF" : "Drucken oder als PDF sichern") + '</span><label class="print-select">' + (T.ui === "en" ? "Section" : "Bereich") + ': <select id="printPart"></select></label><div><button class="btn" id="printBlank">' + esc(L.printBlank) + '</button><button class="btn" id="printKey">' + esc(L.printKey) + '</button><button class="btn" id="printWork">' + esc(L.printWork) + '</button></div></div>' +
   '<div><button class="btn ghost" id="restart">' + esc(L.restart) + "</button></div>";
+const printSheet = document.createElement("section"); printSheet.id = "printSheet"; document.body.appendChild(printSheet);
 
 // ---------- learning part (optional): window.TEST.learn = [{title, intro, words, phrases, dialog, tip}] ----------
 // words / phrases: [[foreign, German, note?]]; dialog: [[who, foreign, German]]. Shown before the test; the test has a button back to it.
-const TEST_PARTS = ["#pos", "#qcard", "#endcard", "#restart"].map(s => $(s)).map(el => el.closest(".progress") || (el.id === "restart" ? el.parentElement : el));
+const TEST_PARTS = ["#pos", "#qcard", "#endcard", "#restart", "#printBlank"].map(s => $(s)).map(el => el.closest(".progress") || (el.id === "restart" ? el.parentElement : el.id === "printBlank" ? el.closest(".print-tools") : el));
 const learnBox = document.createElement("div"); learnBox.id = "learn"; learnBox.className = "learn"; learnBox.hidden = true;
 app.querySelector("header").after(learnBox);
 const sayBtn = t => T.speech ? '<button class="say" data-say="' + esc(strip(t)) + '" aria-label="' + esc(L.listen) + '">🔊</button>' : "";
@@ -224,6 +226,7 @@ if (T.learn && T.learn.length) {
 }
 
 const QS = T.questions;
+$("#printPart").innerHTML = '<option value="">' + (T.ui === "en" ? "Whole test" : "Gesamter Test") + '</option>' + [...new Set(QS.map(q => q.part).filter(Boolean))].map(part => '<option value="' + esc(part) + '">' + esc(part) + '</option>').join("");
 let S, Q;
 function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
 function newRun(order) {
@@ -252,7 +255,6 @@ function render() {
   $("#hintBtn").hidden = !q.hint; $("#hintBtn").disabled = false;
   $("#skipBtn").hidden = false; $("#nextBtn").hidden = true;
   $("#checkBtn").hidden = q.type === "mc";
-  padClear();
   const A = $("#area"); A.innerHTML = "";
   if (q.type === "mc") renderMC(q, A);
   else if (q.type === "num" || q.type === "text") {
@@ -260,7 +262,9 @@ function render() {
       ' autocomplete="off" autocorrect="off" placeholder="' + esc(q.placeholder || L.placeholder) + '" aria-label="Antwort">' + (q.unit ? '<span class="unit">' + esc(q.unit) + "</span>" : "") + "</div>";
     if (!TOUCH) try { $("#answer").focus({ preventScroll: true }); } catch (e) {}
   } else if (q.type === "table") A.innerHTML = tableHTML(q.table, true);
+  else if (q.type === "open") A.innerHTML = '<label class="small" for="answer">' + (T.ui === "en" ? "Optional: type your answer for readability" : "Optional: Antwort für bessere Lesbarkeit eintippen") + '</label><textarea id="answer" class="open-answer" placeholder="' + esc(q.placeholder || L.placeholder) + '"></textarea>';
   else if (q.type === "plot") renderPlot(q, A);
+  restoreDraft(); prepareInk();
   mount();
 }
 
@@ -325,6 +329,16 @@ function shake(el) { if (!el) return; el.classList.remove("shake"); void el.offs
 function check() {
   if (Q.answered) return next();
   const q = cur();
+  if (q.type === "open") {
+    const typed = $("#answer").value.trim(), ink = inkData()[S.order[S.i]] || [];
+    if (!typed && !ink.length) return shake($("#pad"));
+    $("#answer").disabled = true;
+    $("#fb").hidden = false; $("#fb").className = "fb near";
+    $("#fb").innerHTML = '<b>' + esc(L.solution) + ':</b><div>' + (q.sample || q.explain || '') + '</div><div class="actions"><button class="btn primary" id="selfYes">' + esc(L.selfYes) + '</button><button class="btn" id="selfNo">' + esc(L.selfNo) + '</button></div>';
+    $("#selfYes").onclick = () => finish(true); $("#selfNo").onclick = () => finish(false);
+    $("#checkBtn").hidden = true; $("#hintBtn").hidden = true; $("#skipBtn").hidden = true;
+    return;
+  }
   if (q.type === "num" || q.type === "text") {
     const v = $("#answer").value;
     if (!v.trim()) return shake($("#answer"));
@@ -374,6 +388,7 @@ function finish(ok, given, how) {
     const sayText = q.say || (T.speech ? q.accept[0] : "");
     if (sayText) body += '<p><button class="btn" data-say="' + esc(sayText) + '">' + esc(L.listen) + "</button></p>";
   }
+  if (q.type === "open" && q.sample) body += '<p><b>' + esc(L.solution) + ':</b> ' + q.sample + '</p>';
   if (!ok && given) body += '<p class="small">' + esc(L.yours) + ": „" + esc(given) + "“</p>";
   if (q.type === "mc") document.querySelectorAll("#area .mc button").forEach(b => { b.disabled = true; if (+b.dataset.k === q.answer) b.classList.add("right"); });
   if (q.type === "table") tableCells(q).forEach(x => {
@@ -381,7 +396,7 @@ function finish(ok, given, how) {
     if (!cellOk(x)) { x.el.classList.add("no"); x.el.insertAdjacentHTML("afterend", '<span class="sol">' + esc(cellShow(x.c)) + "</span>"); }
   });
   if (q.type === "plot" && ok) drawUser({ ok: new Set(Q.user.keys()), after: q.after });
-  if (q.type === "num" || q.type === "text") { $("#answer").disabled = true; }
+  if (q.type === "num" || q.type === "text" || q.type === "open") { $("#answer").disabled = true; }
   if (q.explain) body += '<div class="explain">' + q.explain + "</div>";
   if (q.explainFig) body += '<div class="figure">' + graph(q.explainFig) + "</div>";
   const fb = $("#fb"); fb.hidden = false; fb.className = "fb " + (ok ? "good" : "bad");
@@ -414,22 +429,121 @@ function renderEnd() {
   $("#allAgain").addEventListener("click", () => newRun());
 }
 
-// ---------- scratch pad (finger or Apple Pencil) ----------
-const cv = $("#pad canvas"); let ctx, drawing = false;
-function padSize() {
-  const r = cv.getBoundingClientRect(), d = window.devicePixelRatio || 1;
-  if (!r.width) return;
-  cv.width = r.width * d; cv.height = r.height * d; ctx = cv.getContext("2d"); ctx.scale(d, d);
-  ctx.lineWidth = 2.2; ctx.lineCap = ctx.lineJoin = "round"; ctx.strokeStyle = getComputedStyle(document.body).color;
+// ---------- answer space: one durable handwriting page per question ----------
+const cv = $("#pad canvas");
+let ctx, activeStroke = null, activePointer = null, penUsed = false;
+const inkData = () => store.get(KEY + ":ink", {});
+const inkId = () => S.order[S.i];
+function prepareInk() {
+  const grid = cur().paper || (/mathe|math/i.test(T.subject || "") || ["num", "table", "plot"].includes(cur().type) ? "grid" : "lines");
+  $("#pad").dataset.paper = grid;
+  cv.style.height = (cur().workHeight || (grid === "grid" ? 300 : cur().type === "open" ? 260 : 190)) + "px";
+  requestAnimationFrame(sizeInk);
 }
-function padClear() { if (ctx) ctx.clearRect(0, 0, cv.width, cv.height); }
-const padPt = e => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-cv.addEventListener("pointerdown", e => { if (!ctx) padSize(); drawing = true; cv.setPointerCapture(e.pointerId); const [x, y] = padPt(e); ctx.beginPath(); ctx.moveTo(x, y); });
-cv.addEventListener("pointermove", e => { if (!drawing) return; const [x, y] = padPt(e); ctx.lineTo(x, y); ctx.stroke(); });
-["pointerup", "pointercancel"].forEach(t => cv.addEventListener(t, () => { drawing = false; }));
-$("#padBtn").addEventListener("click", () => { const p = $("#pad"); p.hidden = !p.hidden; store.set(KEY + ":pad", !p.hidden); if (!p.hidden) padSize(); });
-$("#padClear").addEventListener("click", padClear);
-if (store.get(KEY + ":pad", false)) { $("#pad").hidden = false; requestAnimationFrame(padSize); }
+function sizeInk() {
+  const r = cv.getBoundingClientRect(); if (!r.width || !r.height || !S) return;
+  const d = Math.min(window.devicePixelRatio || 1, 2);
+  cv.width = Math.round(r.width * d); cv.height = Math.round(r.height * d);
+  ctx = cv.getContext("2d"); ctx.scale(d, d);
+  ctx.lineWidth = 2.3; ctx.lineCap = ctx.lineJoin = "round"; ctx.strokeStyle = "#263a51";
+  redrawInk();
+}
+function redrawInk() {
+  if (!ctx || !S) return;
+  const r = cv.getBoundingClientRect(), strokes = inkData()[inkId()] || [];
+  ctx.clearRect(0, 0, r.width, r.height);
+  for (const stroke of [...strokes, ...(activeStroke ? [activeStroke] : [])]) {
+    if (!stroke.length) continue;
+    ctx.beginPath(); ctx.moveTo(stroke[0][0] * r.width, stroke[0][1] * r.height);
+    if (stroke.length === 1) { ctx.lineTo(stroke[0][0] * r.width + .1, stroke[0][1] * r.height + .1); }
+    else for (const [x, y] of stroke.slice(1)) ctx.lineTo(x * r.width, y * r.height);
+    ctx.stroke();
+  }
+}
+function pointInk(e) {
+  const r = cv.getBoundingClientRect();
+  return [Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), Math.max(0, Math.min(1, (e.clientY - r.top) / r.height))].map(n => +n.toFixed(4));
+}
+cv.addEventListener("pointerdown", e => {
+  if (e.pointerType === "pen") penUsed = true;
+  if ((penUsed && e.pointerType === "touch") || activeStroke) return;
+  if (!ctx) sizeInk();
+  activePointer = e.pointerId; activeStroke = [pointInk(e)]; cv.setPointerCapture(e.pointerId); redrawInk();
+});
+cv.addEventListener("pointermove", e => {
+  if (activePointer !== e.pointerId || !activeStroke) return;
+  const p = pointInk(e), last = activeStroke[activeStroke.length - 1];
+  if (Math.abs(p[0] - last[0]) + Math.abs(p[1] - last[1]) < .001) return;
+  activeStroke.push(p); redrawInk();
+});
+function endInk(e) {
+  if (activePointer !== e.pointerId || !activeStroke) return;
+  const data = inkData(), id = inkId(); (data[id] ||= []).push(activeStroke);
+  store.set(KEY + ":ink", data); activeStroke = null; activePointer = null; redrawInk();
+}
+cv.addEventListener("pointerup", endInk); cv.addEventListener("pointercancel", endInk);
+$("#padUndo").addEventListener("click", () => {
+  const data = inkData(); (data[inkId()] || []).pop(); store.set(KEY + ":ink", data); redrawInk();
+});
+$("#padClear").addEventListener("click", e => {
+  if (!e.currentTarget.dataset.armed) {
+    e.currentTarget.dataset.armed = "1";
+    e.currentTarget.textContent = T.ui === "en" ? "Tap again to erase" : "Zum Löschen erneut tippen";
+    setTimeout(() => { delete e.currentTarget.dataset.armed; e.currentTarget.textContent = L.clear; }, 3500); return;
+  }
+  const data = inkData(); delete data[inkId()]; store.set(KEY + ":ink", data);
+  delete e.currentTarget.dataset.armed; e.currentTarget.textContent = L.clear; redrawInk();
+});
+window.addEventListener("resize", () => { if (!$("#qcard").hidden) sizeInk(); });
+function restoreDraft() {
+  const q = cur(), el = $("#answer"); if (!el || !["text", "num", "open"].includes(q.type)) return;
+  el.value = store.get(KEY + ":drafts", {})[inkId()] || "";
+  el.addEventListener("input", () => { const data = store.get(KEY + ":drafts", {}); data[inkId()] = el.value; store.set(KEY + ":drafts", data); });
+}
+
+// ---------- printable exam, separate key, and handwritten work ----------
+function printAnswer(q) {
+  if (q.type === "mc") {
+    const o = q.options[q.answer]; return typeof o === "string" ? o : (o.label || "");
+  }
+  if (q.type === "text") return esc((q.accept || [q.answer])[0]);
+  if (q.type === "num") return esc(q.show || fmt(q.answer) + (q.unit ? " " + q.unit : ""));
+  if (q.type === "open") return q.sample || q.explain || "";
+  if (q.type === "plot") return esc((q.points || []).map(p => "(" + p.join(" | ") + ")").join(", "));
+  if (q.type === "table") return q.table.rows.map(row => row.map(c => c && typeof c === "object" ? cellShow(c) : strip(c)).join(" | ")).join("; ");
+  return "";
+}
+function inkSVG(strokes) {
+  if (!strokes || !strokes.length) return "";
+  return '<svg class="print-ink" viewBox="0 0 1000 1000" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">' +
+    strokes.map(stroke => '<path d="' + stroke.map((p, i) => (i ? "L" : "M") + Math.round(p[0] * 1000) + " " + Math.round(p[1] * 1000)).join(" ") + '" fill="none" stroke="#263a51" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>').join("") + "</svg>";
+}
+function printTest(mode) {
+  const ink = inkData(), drafts = store.get(KEY + ":drafts", {}), key = mode === "key", worked = mode === "work";
+  const part = $("#printPart").value;
+  const items = QS.map((q,i) => [q,i]).filter(([q]) => !part || q.part === part);
+  const title = key ? L.printKey : worked ? L.printWork : L.printBlank;
+  let h = '<div class="sheet-head"><span class="sheet-kicker">' + esc(T.subject || T.eyebrow || "Lerntests") + '</span><h1>' + esc(T.title) + (part ? ' · ' + esc(part) : '') + '</h1><p>' + esc(title) + ' · ' + items.length + ' ' + (T.ui === "en" ? "questions" : "Aufgaben") + '</p>' +
+    (key ? "" : '<div class="sheet-name">' + (T.ui === "en" ? "Name" : "Name") + ': ___________________________ &nbsp; ' + (T.ui === "en" ? "Date" : "Datum") + ': _____________</div>') + '</div>';
+  items.forEach(([q, i], number) => {
+    const grid = q.paper || (/mathe|math/i.test(T.subject || "") || ["num", "table", "plot"].includes(q.type) ? "grid" : "lines");
+    const fig = q.fig ? '<div class="sheet-figure">' + graph(q.fig) + '</div>' : q.type === "plot" ? '<div class="sheet-figure plot-figure">' + graph(q.grid) + '</div>' : "";
+    let choices = "";
+    if (!key && q.type === "mc") choices = '<div class="sheet-choices">' + q.options.map(o => '<div>◯ &nbsp;' + (typeof o === "string" ? o : (o.label || (o.fig ? graph(Object.assign({ small: true, w: 220, h: 170 }, o.fig)) : ""))) + '</div>').join("") + '</div>';
+    if (!key && q.type === "table") choices = tableHTML(q.table, false);
+    const writing = !key ? '<div class="sheet-space ' + grid + '" style="height:' + (q.printHeight || (grid === "grid" ? 115 : q.type === "open" ? 125 : 62)) + 'px">' + (worked ? inkSVG(ink[i]) : "") + '</div>' : "";
+    const typed = worked && drafts[i] ? '<p class="sheet-typed">' + esc(drafts[i]) + '</p>' : "";
+    h += '<article class="sheet-question"><h2>' + (number + 1) + '. ' + q.prompt + '</h2>' + (q.sub ? '<p>' + q.sub + '</p>' : "") + fig + choices + typed + writing +
+      (key ? '<div class="sheet-solution"><b>' + esc(L.solution) + ':</b> ' + printAnswer(q) + (q.explain && q.type !== "open" ? '<div class="sheet-explain">' + q.explain + '</div>' : "") + '</div>' : "") + '</article>';
+  });
+  printSheet.innerHTML = h;
+  document.body.classList.add("printing-test");
+  requestAnimationFrame(() => requestAnimationFrame(() => window.print()));
+}
+window.addEventListener("afterprint", () => document.body.classList.remove("printing-test"));
+$("#printBlank").onclick = () => printTest("blank");
+$("#printKey").onclick = () => printTest("key");
+$("#printWork").onclick = () => printTest("work");
 
 // ---------- speech ----------
 function say(text) {

@@ -1,13 +1,13 @@
 {
- "version": "160c6f29c4",
- "built": "20.11.2026 03:19",
+ "version": "6c6e83b371",
+ "built": "22.11.2026 14:27",
  "tests": [
   {
    "path": "tests/kl7/biologie-wirbellose.html",
    "title": "Biologie · Regenwurm, Schnecke und Biene",
    "area": "kl7",
    "subject": "Biologie",
-   "desc": "Regenwurm S. 24–26 · Weinbergschnecke S. 28–30 · Honigbiene S. 32–33 · 18 Fragen",
+   "desc": "Regenwurm S. 24–26 · Weinbergschnecke S. 28–30 · Honigbiene S. 32–33 · 62 Fragen",
    "order": 20
   },
   {
