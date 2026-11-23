@@ -1,6 +1,6 @@
 {
- "version": "6c6e83b371",
- "built": "22.11.2026 14:27",
+ "version": "4ddde892e3",
+ "built": "23.11.2026 16:29",
  "tests": [
   {
    "path": "tests/kl7/biologie-wirbellose.html",
@@ -41,6 +41,14 @@
    "subject": "Mathe",
    "desc": "Proportional, antiproportional, Dreisatz, Graphen zeichnen und ablesen · 22 Aufgaben",
    "order": 10
+  },
+  {
+   "path": "tests/kl7/mathe-wahrscheinlichkeit.html",
+   "title": "Mathe: Zufall und Wahrscheinlichkeit",
+   "area": "kl7",
+   "subject": "Mathe",
+   "desc": "Zufallsexperiment, Ergebnis und Ereignis, relative Häufigkeit, Gesetz der großen Zahlen, Laplace-Regel, Summen- und Komplementärregel · 51 Aufgaben",
+   "order": 20
   }
  ]
 }
