@@ -1,6 +1,6 @@
 {
- "version": "2f7f232785",
- "built": "25.11.2026 15:24",
+ "version": "47ff21345f",
+ "built": "28.11.2026 07:32",
  "tests": [
   {
    "path": "tests/kl7/biologie-wirbellose.html",
@@ -47,8 +47,16 @@
    "title": "Mathe: Zufall und Wahrscheinlichkeit",
    "area": "kl7",
    "subject": "Mathe",
-   "desc": "Zufallsexperiment, Ergebnis und Ereignis, relative Häufigkeit, Gesetz der großen Zahlen, Laplace-Regel, Summen- und Komplementärregel · 51 Aufgaben",
+   "desc": "Zufallsexperiment, Ergebnis und Ereignis, relative Häufigkeit, Gesetz der großen Zahlen, Laplace-Regel, Summen- und Komplementärregel · nach „Ich kann …“-Bogen · 65 Aufgaben",
    "order": 20
+  },
+  {
+   "path": "tests/kl7/mathe-prozent-zinsen.html",
+   "title": "Mathe: Prozent- und Zinsrechnung",
+   "area": "kl7",
+   "subject": "Mathe",
+   "desc": "Prozentwert, Prozentsatz, Grundwert, prozentuale Veränderungen, Zinsen · nach „Ich kann …“-Bogen · 51 Aufgaben",
+   "order": 30
   }
  ]
 }

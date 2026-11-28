@@ -199,3 +199,9 @@ ul.miss{margin:0;padding-left:18px}
 .learn.hide-tr .tr{color:transparent !important;background:var(--line);border-radius:6px;cursor:pointer;user-select:none}
 .learn.hide-tr .tr.shown{color:inherit !important;background:none}
 @media (max-width:520px){.learn-t td.fx{width:auto}.learn-t tr{display:flex;flex-direction:column}.learn-t td{border:0;padding:2px 6px}.learn-t tr{border-top:1px solid var(--line);padding:6px 0}}
+
+/* "Ich kann ..." checklist: wraps on a phone so the smiley column stays visible */
+.qtable.checklist { width: 100%; }
+.qtable.checklist th, .qtable.checklist td { white-space: normal; padding: 8px 6px; text-align: center; vertical-align: middle; }
+.qtable.checklist th:first-child, .qtable.checklist td:first-child { text-align: left; width: 100%; min-width: 0; }
+.qtable.checklist td:nth-child(2), .qtable.checklist td:nth-child(3) { white-space: nowrap; }

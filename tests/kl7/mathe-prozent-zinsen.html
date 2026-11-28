@@ -1,0 +1,852 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mathe: Prozent- und Zinsrechnung</title>
+<meta name="hub:area" content="kl7">
+<meta name="hub:subject" content="Mathe">
+<meta name="hub:desc" content="Prozentwert, Prozentsatz, Grundwert, prozentuale Veränderungen, Zinsen · nach „Ich kann …“-Bogen · 51 Aufgaben">
+<meta name="hub:order" content="30">
+<link rel="stylesheet" href="../../fonts/fonts.css">
+<link rel="stylesheet" href="../../engine/quiz.css">
+<script src="../../hub.js"></script>
+</head>
+<body>
+<div class="wrap"></div>
+<script>
+// Klasse 7, EDM 7 Kapitel 2 (S. 54-81) plus Heftnotizen 16.-20.11.2026. Alle Rechenantworten in Python nachgerechnet.
+window.TEST = {
+  "key": "mathe-prozent-zinsen-v1",
+  "title": "Prozent- und Zinsrechnung",
+  "eyebrow": "Mathe · Klasse 7 · EDM 7",
+  "subject": "Mathe",
+  "intro": "Erst den Lernteil anschauen, dann testen. Prozente und Euro kannst du mit oder ohne Zeichen eintippen. Rechne auf dem karierten Feld mit Finger oder Apple Pencil.",
+  "checklist": [
+    [
+      "P1 · Prozentwerte",
+      "Ich kann Prozentwerte berechnen."
+    ],
+    [
+      "P2 · Prozentsätze",
+      "Ich kann Prozentsätze berechnen."
+    ],
+    [
+      "P3 · Grundwerte",
+      "Ich kann Grundwerte berechnen."
+    ],
+    [
+      "P4 · Veränderung: Prozentwert",
+      "Ich kann Prozentwerte bei prozentualen Veränderungen berechnen."
+    ],
+    [
+      "P5 · Veränderung: Prozentsatz",
+      "Ich kann Prozentsätze bei prozentualen Veränderungen berechnen."
+    ],
+    [
+      "P6 · Veränderung: Grundwert",
+      "Ich kann Grundwerte bei prozentualen Veränderungen berechnen."
+    ],
+    [
+      "P7 · Zinsen",
+      "Ich kann Jahreszinsen, Zinssätze und das Ausgangskapital berechnen."
+    ]
+  ],
+  "learn": [
+    {
+      "title": "Checkliste: Ich kann …",
+      "checklist": true,
+      "intro": "Bei jeder Frage steht oben der Bereich (P1 bis P7) aus deinem Bogen. Am Ende zeigt dir die Auswertung zu jeder Zeile einen Smiley."
+    },
+    {
+      "title": "Grundbegriffe: G, W, p %",
+      "intro": "<b>Grundwert G</b> = das Ganze (100 %). <b>Prozentwert W</b> = der Teil. <b>Prozentsatz p %</b> = der Anteil.<br><img src=\"../../media/mathe/prozentstreifen.svg\" alt=\"Prozentstreifen\" style=\"display:block;max-width:480px;width:100%;margin:8px auto\">",
+      "tip": "Erst entscheiden, was gesucht ist. Dann rechnen."
+    },
+    {
+      "title": "Prozentwert, Prozentsatz, Grundwert",
+      "intro": "<b>W = G · p : 100</b><br><b>p = W · 100 : G</b><br><b>G = W · 100 : p</b><br>Dreisatz-Beispiel Grundwert: 30 % sind 12 → 1 % ist 0,4 → 100 % sind 40.",
+      "tip": "Dreisatz: immer über 1 %."
+    },
+    {
+      "title": "Prozentuale Veränderungen",
+      "intro": "Steigerung <b>um</b> p % = Steigerung <b>auf</b> (100 + p) %. Senkung <b>um</b> p % = Senkung <b>auf</b> (100 − p) %.<br><b>Faktor-Methode:</b> neuer Wert = alter Wert · Faktor (+3 % → 1,03; −20 % → 0,8).<br>Rückwärts: alter Wert = neuer Wert : Faktor.<br><img src=\"../../media/mathe/erhoehung.svg\" alt=\"Erhöhung\" style=\"display:block;max-width:480px;width:100%;margin:8px auto\"><img src=\"../../media/mathe/senkung.svg\" alt=\"Senkung\" style=\"display:block;max-width:480px;width:100%;margin:8px auto\">",
+      "tip": "Der Grundwert ist immer der <b>alte</b> Wert."
+    },
+    {
+      "title": "Zinsen für 1 Jahr",
+      "intro": "<b>Z = K · p : 100</b> · <b>p = Z · 100 : K</b> · <b>K = Z · 100 : p</b><br><img src=\"../../media/mathe/zinsen.svg\" alt=\"Zinsrechnung\" style=\"display:block;max-width:480px;width:100%;margin:8px auto\">",
+      "tip": "Kapital = Grundwert, Zinsen = Prozentwert, Zinssatz = Prozentsatz."
+    }
+  ],
+  "questions": [
+    {
+      "part": "P1 · Prozentwerte",
+      "type": "mc",
+      "prompt": "Von 250 Schülerinnen und Schülern kommen 40 % mit dem Fahrrad. Das sind 100 Kinder.",
+      "options": [
+        "100",
+        "250",
+        "40 %"
+      ],
+      "answer": 1,
+      "explain": "<p>250 ist das Ganze, also der <b>Grundwert G</b>. 40 % ist der Prozentsatz p %, 100 der Prozentwert W.</p>",
+      "sub": "Welche Zahl ist der Grundwert G?",
+      "explainFig": {
+        "img": "../../media/mathe/prozentstreifen.svg",
+        "alt": "Prozentstreifen mit Grundwert, Prozentwert und Prozentsatz"
+      }
+    },
+    {
+      "part": "P1 · Prozentwerte",
+      "type": "num",
+      "prompt": "Berechne 15 % von 80 €.",
+      "answer": 12,
+      "unit": "€",
+      "explain": "<p>W = 80 · 15 : 100 = <b>12 €</b>.</p>",
+      "hint": "1 % ist der hundertste Teil. Dann mal 15.",
+      "explainFig": {
+        "img": "../../media/mathe/prozentstreifen.svg",
+        "alt": "Prozentstreifen mit Grundwert, Prozentwert und Prozentsatz"
+      }
+    },
+    {
+      "part": "P1 · Prozentwerte",
+      "type": "num",
+      "prompt": "Berechne 7 % von 350 kg.",
+      "answer": 24.5,
+      "unit": "kg",
+      "explain": "<p>1 % = 3,5 kg. 7 · 3,5 = <b>24,5 kg</b>.</p>"
+    },
+    {
+      "part": "P1 · Prozentwerte",
+      "type": "num",
+      "prompt": "Berechne 2,5 % von 1200 m.",
+      "answer": 30,
+      "unit": "m",
+      "explain": "<p>1200 · 0,025 = <b>30 m</b>.</p>"
+    },
+    {
+      "part": "P1 · Prozentwerte",
+      "type": "num",
+      "prompt": "Eine Jacke kostet 89 €. Es gibt 35 % Rabatt.",
+      "answer": 31.15,
+      "unit": "€",
+      "explain": "<p>W = 89 · 0,35 = <b>31,15 €</b> Rabatt.</p>",
+      "sub": "Wie viel Euro beträgt der Rabatt?",
+      "tol": 0.005,
+      "show": "31,15 €"
+    },
+    {
+      "part": "P1 · Prozentwerte",
+      "type": "table",
+      "prompt": "Grundwert 600 €. Berechne die Prozentwerte.",
+      "table": {
+        "head": [
+          "Prozentsatz",
+          "Prozentwert (€)"
+        ],
+        "rows": [
+          [
+            "1 %",
+            {
+              "a": 6
+            }
+          ],
+          [
+            "10 %",
+            {
+              "a": 60
+            }
+          ],
+          [
+            "25 %",
+            {
+              "a": 150
+            }
+          ],
+          [
+            "120 %",
+            {
+              "a": 720
+            }
+          ]
+        ]
+      },
+      "explain": "<p>1 % = 6 €, 10 % = 60 €, 25 % = 150 €, 120 % = <b>720 €</b> (mehr als das Ganze).</p>",
+      "hint": "Beginne mit 1 %: 600 : 100."
+    },
+    {
+      "part": "P1 · Prozentwerte",
+      "type": "num",
+      "prompt": "Ein Joghurt (500 g) enthält 3,8 % Fett.",
+      "answer": 19,
+      "unit": "g",
+      "explain": "<p>500 · 3,8 : 100 = <b>19 g</b>.</p>",
+      "sub": "Wie viel Gramm Fett sind das?"
+    },
+    {
+      "part": "P2 · Prozentsätze",
+      "type": "mc",
+      "prompt": "Welche Formel liefert den Prozentsatz p?",
+      "options": [
+        "p = W · G : 100",
+        "p = W · 100 : G",
+        "p = G · 100 : W"
+      ],
+      "answer": 1,
+      "explain": "<p>p = W · 100 : G. Anteil durch Ganzes, dann mal 100.</p>",
+      "explainFig": {
+        "img": "../../media/mathe/prozentstreifen.svg",
+        "alt": "Prozentstreifen mit Grundwert, Prozentwert und Prozentsatz"
+      }
+    },
+    {
+      "part": "P2 · Prozentsätze",
+      "type": "num",
+      "prompt": "Wie viel Prozent sind 18 von 60?",
+      "answer": 30,
+      "unit": "%",
+      "explain": "<p>18 · 100 : 60 = <b>30 %</b>.</p>"
+    },
+    {
+      "part": "P2 · Prozentsätze",
+      "type": "num",
+      "prompt": "Wie viel Prozent sind 45 € von 180 €?",
+      "answer": 25,
+      "unit": "%",
+      "explain": "<p>45 : 180 = 0,25 = <b>25 %</b>.</p>"
+    },
+    {
+      "part": "P2 · Prozentsätze",
+      "type": "num",
+      "prompt": "In einer Klasse mit 32 Kindern spielen 14 ein Instrument.",
+      "answer": 43.8,
+      "unit": "%",
+      "explain": "<p>14 : 32 = 0,4375 ≈ <b>43,8 %</b>.</p>",
+      "sub": "Prozentsatz? Eine Stelle nach dem Komma.",
+      "tol": 0.1,
+      "show": "43,8 %"
+    },
+    {
+      "part": "P2 · Prozentsätze",
+      "type": "num",
+      "prompt": "Wie viel Prozent einer Stunde sind 12 Minuten?",
+      "answer": 20,
+      "unit": "%",
+      "explain": "<p>1 h = 60 min. 12 : 60 = <b>20 %</b>.</p>",
+      "hint": "Erst beide Werte in dieselbe Einheit bringen."
+    },
+    {
+      "part": "P2 · Prozentsätze",
+      "type": "table",
+      "prompt": "Berechne die Prozentsätze.",
+      "table": {
+        "head": [
+          "W von G",
+          "p (%)"
+        ],
+        "rows": [
+          [
+            "9 von 36",
+            {
+              "a": 25
+            }
+          ],
+          [
+            "3,60 € von 4,80 €",
+            {
+              "a": 75
+            }
+          ],
+          [
+            "27 von 150",
+            {
+              "a": 18
+            }
+          ],
+          [
+            "250 g von 2 kg",
+            {
+              "a": 12.5,
+              "show": "12,5"
+            }
+          ]
+        ]
+      },
+      "explain": "<p>9:36 = 25 % · 3,60:4,80 = 75 % · 27:150 = 18 % · 250:2000 = <b>12,5 %</b>.</p>",
+      "hint": "Beim letzten: 2 kg = 2000 g."
+    },
+    {
+      "part": "P2 · Prozentsätze",
+      "type": "num",
+      "prompt": "Bei einem Test erreicht Mia 42 von 56 Punkten.",
+      "answer": 75,
+      "unit": "%",
+      "explain": "<p>42 : 56 = 0,75 = <b>75 %</b>.</p>",
+      "sub": "Wie viel Prozent sind das?"
+    },
+    {
+      "part": "P3 · Grundwerte",
+      "type": "mc",
+      "prompt": "Wie berechnet man den Grundwert G (wie in deinem Heft)?",
+      "options": [
+        "W mal p, dann durch 100",
+        "p durch W teilen, dann mal 100",
+        "W durch p teilen, dann mal 100"
+      ],
+      "answer": 2,
+      "explain": "<p>G = W · 100 : p. Erst auf 1 % zurückrechnen, dann auf 100 %.</p>",
+      "explainFig": {
+        "img": "../../media/mathe/prozentstreifen.svg",
+        "alt": "Prozentstreifen mit Grundwert, Prozentwert und Prozentsatz"
+      }
+    },
+    {
+      "part": "P3 · Grundwerte",
+      "type": "num",
+      "prompt": "12 Kinder verlassen den Chor. Das sind 30 % aller Mitglieder.",
+      "answer": 40,
+      "unit": "Kinder",
+      "explain": "<p>G = 12 · 100 : 30 = <b>40</b>.</p>",
+      "sub": "Wie viele Mitglieder hat der Chor?",
+      "hint": "30 % sind 12. Wie viel ist 1 %?"
+    },
+    {
+      "part": "P3 · Grundwerte",
+      "type": "num",
+      "prompt": "54 € sind 6 % von welchem Betrag?",
+      "answer": 900,
+      "unit": "€",
+      "explain": "<p>54 · 100 : 6 = <b>900 €</b>.</p>"
+    },
+    {
+      "part": "P3 · Grundwerte",
+      "type": "num",
+      "prompt": "15 km sind 12 % der Strecke.",
+      "answer": 125,
+      "unit": "km",
+      "explain": "<p>15 · 100 : 12 = <b>125 km</b>.</p>",
+      "sub": "Wie lang ist die ganze Strecke?"
+    },
+    {
+      "part": "P3 · Grundwerte",
+      "type": "num",
+      "prompt": "Jemand ist 1 h 22 min gelaufen. Das sind 40 % der Gesamtzeit.",
+      "answer": 205,
+      "unit": "min",
+      "explain": "<p>1 h 22 min = 82 min. 82 · 100 : 40 = <b>205 min</b>.</p>",
+      "sub": "Gesamtzeit in Minuten?",
+      "hint": "Rechne zuerst alles in Minuten um."
+    },
+    {
+      "part": "P3 · Grundwerte",
+      "type": "table",
+      "prompt": "Berechne die Grundwerte.",
+      "table": {
+        "head": [
+          "Prozentwert",
+          "Prozentsatz",
+          "Grundwert"
+        ],
+        "rows": [
+          [
+            "36 €",
+            "80 %",
+            {
+              "a": 45
+            }
+          ],
+          [
+            "18 kg",
+            "45 %",
+            {
+              "a": 40
+            }
+          ],
+          [
+            "7 m",
+            "2 %",
+            {
+              "a": 350
+            }
+          ],
+          [
+            "66 l",
+            "110 %",
+            {
+              "a": 60
+            }
+          ]
+        ]
+      },
+      "explain": "<p>36·100:80 = 45 € · 18·100:45 = 40 kg · 7·100:2 = 350 m · 66·100:110 = <b>60 l</b>.</p>"
+    },
+    {
+      "part": "P3 · Grundwerte",
+      "type": "num",
+      "prompt": "Eine Zeitung hat 12 000 Abonnenten. Das sind 80 % aller Käufer.",
+      "answer": 15000,
+      "unit": "Käufer",
+      "explain": "<p>12 000 · 100 : 80 = <b>15 000</b>.</p>",
+      "sub": "Wie viele Käufer sind es insgesamt?"
+    },
+    {
+      "part": "P4 · Veränderung: Prozentwert",
+      "type": "mc",
+      "prompt": "Ein Preis steigt <b>um</b> 12 %.",
+      "options": [
+        "Er steigt auf 88 %.",
+        "Er steigt auf 112 %.",
+        "Er steigt auf 12 %."
+      ],
+      "answer": 1,
+      "explain": "<p>Steigerung um p % = Steigerung auf (100 + p) %.</p>",
+      "sub": "Was ist richtig?",
+      "explainFig": {
+        "img": "../../media/mathe/erhoehung.svg",
+        "alt": "Erhöhung um p Prozent auf 100 plus p Prozent"
+      }
+    },
+    {
+      "part": "P4 · Veränderung: Prozentwert",
+      "type": "mc",
+      "prompt": "Ein Preis wird <b>um</b> 20 % gesenkt.",
+      "options": [
+        "0,2",
+        "0,8",
+        "1,2"
+      ],
+      "answer": 1,
+      "explain": "<p>100 % − 20 % = 80 % = Faktor <b>0,8</b>.</p>",
+      "sub": "Mit welchem Faktor multiplizierst du den alten Preis?",
+      "explainFig": {
+        "img": "../../media/mathe/senkung.svg",
+        "alt": "Senkung um p Prozent auf 100 minus p Prozent"
+      }
+    },
+    {
+      "part": "P4 · Veränderung: Prozentwert",
+      "type": "num",
+      "prompt": "Ein Auto kostet 21 500 €. Der Preis wird um 3 % erhöht.",
+      "answer": 22145,
+      "unit": "€",
+      "explain": "<p>Weg 1: 3 % = 645 €, 21 500 + 645 = 22 145 €. Weg 2: 21 500 · 1,03 = <b>22 145 €</b>.</p>",
+      "sub": "Neuer Preis?",
+      "explainFig": {
+        "img": "../../media/mathe/erhoehung.svg",
+        "alt": "Erhöhung um p Prozent auf 100 plus p Prozent"
+      }
+    },
+    {
+      "part": "P4 · Veränderung: Prozentwert",
+      "type": "num",
+      "prompt": "Ein Pullover für 80 € wird um 15 % billiger.",
+      "answer": 68,
+      "unit": "€",
+      "explain": "<p>80 · 0,85 = <b>68 €</b>.</p>",
+      "sub": "Neuer Preis?",
+      "explainFig": {
+        "img": "../../media/mathe/senkung.svg",
+        "alt": "Senkung um p Prozent auf 100 minus p Prozent"
+      }
+    },
+    {
+      "part": "P4 · Veränderung: Prozentwert",
+      "type": "num",
+      "prompt": "Ein Rechnungsbetrag ohne Mehrwertsteuer ist 150 €. Dazu kommen 19 % Mehrwertsteuer.",
+      "answer": 178.5,
+      "unit": "€",
+      "explain": "<p>150 · 1,19 = <b>178,50 €</b>.</p>",
+      "sub": "Preis mit Mehrwertsteuer?",
+      "tol": 0.005,
+      "show": "178,50 €"
+    },
+    {
+      "part": "P4 · Veränderung: Prozentwert",
+      "type": "num",
+      "prompt": "Eine Kugel Eis kostet 1,20 €. Der Preis steigt um 25 %.",
+      "answer": 1.5,
+      "unit": "€",
+      "explain": "<p>1,20 · 1,25 = <b>1,50 €</b>.</p>",
+      "sub": "Neuer Preis?",
+      "show": "1,50 €"
+    },
+    {
+      "part": "P4 · Veränderung: Prozentwert",
+      "type": "table",
+      "prompt": "Berechne den neuen Wert.",
+      "table": {
+        "head": [
+          "alter Wert",
+          "Änderung",
+          "neuer Wert"
+        ],
+        "rows": [
+          [
+            "250 €",
+            "+ 8 %",
+            {
+              "a": 270
+            }
+          ],
+          [
+            "400 kg",
+            "− 5 %",
+            {
+              "a": 380
+            }
+          ],
+          [
+            "60 €",
+            "+ 150 %",
+            {
+              "a": 150
+            }
+          ],
+          [
+            "90 min",
+            "− 30 %",
+            {
+              "a": 63
+            }
+          ]
+        ]
+      },
+      "explain": "<p>250·1,08 = 270 · 400·0,95 = 380 · 60·2,5 = 150 · 90·0,7 = <b>63</b>.</p>",
+      "hint": "Faktor-Methode: neuer Wert = alter Wert · Faktor."
+    },
+    {
+      "part": "P5 · Veränderung: Prozentsatz",
+      "type": "num",
+      "prompt": "Eine Kugel Eis kostete 0,80 €, jetzt 1,20 €.",
+      "answer": 150,
+      "unit": "%",
+      "explain": "<p>1,20 : 0,80 = 1,5. Der Preis ist <b>auf 150 %</b> gestiegen.</p>",
+      "sub": "AUF wie viel Prozent ist der Preis gestiegen?",
+      "explainFig": {
+        "img": "../../media/mathe/erhoehung.svg",
+        "alt": "Erhöhung um p Prozent auf 100 plus p Prozent"
+      }
+    },
+    {
+      "part": "P5 · Veränderung: Prozentsatz",
+      "type": "num",
+      "prompt": "Eine Kugel Eis kostete 0,80 €, jetzt 1,20 €.",
+      "answer": 50,
+      "unit": "%",
+      "explain": "<p>Auf 150 %, also <b>um 50 %</b>.</p>",
+      "sub": "UM wie viel Prozent ist der Preis gestiegen?",
+      "explainFig": {
+        "img": "../../media/mathe/erhoehung.svg",
+        "alt": "Erhöhung um p Prozent auf 100 plus p Prozent"
+      }
+    },
+    {
+      "part": "P5 · Veränderung: Prozentsatz",
+      "type": "num",
+      "prompt": "Ein Fahrschein kostet statt 1,90 € jetzt 2,10 €.",
+      "answer": 10.5,
+      "unit": "%",
+      "explain": "<p>2,10 : 1,90 ≈ 1,105. Auf 110,5 %, also <b>um 10,5 %</b>. Zwischenschritt: 1 € sind 100 : 1,9 ≈ 52,63 %, mal 2,1 ≈ 110,5 %. Nicht zu früh runden!</p>",
+      "sub": "UM wie viel Prozent ist der Preis gestiegen? Eine Stelle nach dem Komma.",
+      "tol": 0.05,
+      "show": "10,5 %"
+    },
+    {
+      "part": "P5 · Veränderung: Prozentsatz",
+      "type": "num",
+      "prompt": "Im Jahr 2000 gab es 9000 Windkraftanlagen, 2011 etwa 22 500.",
+      "answer": 150,
+      "unit": "%",
+      "explain": "<p>22 500 : 9000 = 2,5 = auf 250 %, also <b>um 150 %</b>.</p>",
+      "sub": "UM wie viel Prozent ist die Anzahl gestiegen?"
+    },
+    {
+      "part": "P5 · Veränderung: Prozentsatz",
+      "type": "num",
+      "prompt": "Herr Meier braucht zur Arbeit nur noch 50 min statt 60 min.",
+      "answer": 16.7,
+      "unit": "%",
+      "explain": "<p>50 : 60 ≈ 83,3 %. 100 % − 83,3 % = <b>16,7 %</b> weniger Fahrzeit.</p>",
+      "sub": "UM wie viel Prozent ist die Fahrzeit gesunken? Eine Stelle nach dem Komma.",
+      "tol": 0.1,
+      "show": "16,7 %",
+      "explainFig": {
+        "img": "../../media/mathe/senkung.svg",
+        "alt": "Senkung um p Prozent auf 100 minus p Prozent"
+      }
+    },
+    {
+      "part": "P5 · Veränderung: Prozentsatz",
+      "type": "num",
+      "prompt": "Ein Spiel kostet jetzt 68 € statt 80 €.",
+      "answer": 15,
+      "unit": "%",
+      "explain": "<p>68 : 80 = 85 %. Gesenkt <b>um 15 %</b>.</p>",
+      "sub": "UM wie viel Prozent wurde es billiger?"
+    },
+    {
+      "part": "P5 · Veränderung: Prozentsatz",
+      "type": "mc",
+      "prompt": "Ein Preis steigt von 40 € auf 50 €.",
+      "options": [
+        "um 20 %",
+        "um 10 %",
+        "um 25 %"
+      ],
+      "answer": 2,
+      "explain": "<p>Grundwert ist der <b>alte</b> Preis: 10 : 40 = 25 %.</p>",
+      "sub": "Um wie viel Prozent ist er gestiegen?",
+      "hint": "Welcher Preis ist der Grundwert?"
+    },
+    {
+      "part": "P6 · Veränderung: Grundwert",
+      "type": "mc",
+      "prompt": "Nach 20 % Rabatt kostet eine Hose 60 €.",
+      "options": [
+        "80 %",
+        "20 %",
+        "120 %"
+      ],
+      "answer": 0,
+      "explain": "<p>Nach 20 % Rabatt bleiben 80 % übrig. Die 60 € sind also 80 %.</p>",
+      "sub": "Wie viel Prozent des alten Preises sind die 60 €?",
+      "explainFig": {
+        "img": "../../media/mathe/senkung.svg",
+        "alt": "Senkung um p Prozent auf 100 minus p Prozent"
+      }
+    },
+    {
+      "part": "P6 · Veränderung: Grundwert",
+      "type": "num",
+      "prompt": "Nach 20 % Rabatt kostet eine Hose 60 €.",
+      "answer": 75,
+      "unit": "€",
+      "explain": "<p>60 € = 80 %. 60 · 100 : 80 = <b>75 €</b>.</p>",
+      "sub": "Alter Preis?",
+      "hint": "60 € sind nicht 100 %.",
+      "explainFig": {
+        "img": "../../media/mathe/senkung.svg",
+        "alt": "Senkung um p Prozent auf 100 minus p Prozent"
+      }
+    },
+    {
+      "part": "P6 · Veränderung: Grundwert",
+      "type": "num",
+      "prompt": "Nach einer Preiserhöhung um 12 % kostet das Schulessen 4,50 €.",
+      "answer": 4.02,
+      "unit": "€",
+      "explain": "<p>4,50 € = 112 %. 4,50 · 100 : 112 ≈ <b>4,02 €</b>.</p>",
+      "sub": "Alter Preis? Auf Cent runden.",
+      "tol": 0.005,
+      "show": "4,02 €",
+      "explainFig": {
+        "img": "../../media/mathe/erhoehung.svg",
+        "alt": "Erhöhung um p Prozent auf 100 plus p Prozent"
+      }
+    },
+    {
+      "part": "P6 · Veränderung: Grundwert",
+      "type": "num",
+      "prompt": "Ein Beitrag ist auf 125 % gestiegen und beträgt jetzt 35 € im Monat.",
+      "answer": 28,
+      "unit": "€",
+      "explain": "<p>35 · 100 : 125 = <b>28 €</b>.</p>",
+      "sub": "Alter Beitrag?",
+      "explainFig": {
+        "img": "../../media/mathe/erhoehung.svg",
+        "alt": "Erhöhung um p Prozent auf 100 plus p Prozent"
+      }
+    },
+    {
+      "part": "P6 · Veränderung: Grundwert",
+      "type": "num",
+      "prompt": "Ein Wert ist auf 85 % gesunken und beträgt jetzt 250.",
+      "answer": 294.12,
+      "unit": "",
+      "explain": "<p>250 · 100 : 85 ≈ <b>294,12</b>.</p>",
+      "sub": "Alter Wert? Zwei Stellen nach dem Komma.",
+      "tol": 0.13,
+      "show": "294,12",
+      "explainFig": {
+        "img": "../../media/mathe/senkung.svg",
+        "alt": "Senkung um p Prozent auf 100 minus p Prozent"
+      }
+    },
+    {
+      "part": "P6 · Veränderung: Grundwert",
+      "type": "num",
+      "prompt": "Ein Gerät kostet mit 19 % Mehrwertsteuer 119 €.",
+      "answer": 100,
+      "unit": "€",
+      "explain": "<p>119 € = 119 %. 119 · 100 : 119 = <b>100 €</b>.</p>",
+      "sub": "Preis ohne Mehrwertsteuer?"
+    },
+    {
+      "part": "P6 · Veränderung: Grundwert",
+      "type": "mc",
+      "prompt": "Eine Jacke wurde um 30 % reduziert und kostet jetzt 56 €.",
+      "options": [
+        "72,80 €: 56 plus 30 % von 56",
+        "86 €: 56 plus 30",
+        "80 €: 56 · 100 : 70"
+      ],
+      "answer": 2,
+      "explain": "<p>56 € sind 70 % des alten Preises. 56 · 100 : 70 = <b>80 €</b>. Typischer Fehler: 30 % von 56 dazurechnen.</p>",
+      "sub": "Welche Rechnung liefert den alten Preis?"
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "mc",
+      "prompt": "Bei der Zinsrechnung gilt:",
+      "options": [
+        "Kapital = Prozentsatz, Zinsen = Grundwert",
+        "Kapital = Prozentwert, Zinsen = Grundwert",
+        "Kapital = Grundwert, Zinsen = Prozentwert, Zinssatz = Prozentsatz"
+      ],
+      "answer": 2,
+      "explain": "<p>Zinsrechnung ist Prozentrechnung mit neuen Namen.</p>",
+      "sub": "Welche Zuordnung stimmt?",
+      "explainFig": {
+        "img": "../../media/mathe/zinsen.svg",
+        "alt": "Kapital, Zinssatz und Zinsen"
+      }
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "num",
+      "prompt": "Lukas legt 450 € ein Jahr lang zu 2 % an.",
+      "answer": 9,
+      "unit": "€",
+      "explain": "<p>Z = 450 · 2 : 100 = <b>9 €</b>.</p>",
+      "sub": "Jahreszinsen?",
+      "explainFig": {
+        "img": "../../media/mathe/zinsen.svg",
+        "alt": "Kapital, Zinssatz und Zinsen"
+      }
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "num",
+      "prompt": "Für ein Darlehen von 1400 € verlangt die Bank 9 % Zinsen im Jahr.",
+      "answer": 126,
+      "unit": "€",
+      "explain": "<p>1400 · 0,09 = <b>126 €</b>.</p>",
+      "sub": "Wie viel Zinsen sind das nach einem Jahr?",
+      "explainFig": {
+        "img": "../../media/mathe/zinsen.svg",
+        "alt": "Kapital, Zinssatz und Zinsen"
+      }
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "num",
+      "prompt": "Für 800 € Guthaben gibt es nach einem Jahr 20 € Zinsen.",
+      "answer": 2.5,
+      "unit": "%",
+      "explain": "<p>p = 20 · 100 : 800 = <b>2,5 %</b>.</p>",
+      "sub": "Zinssatz?",
+      "show": "2,5 %",
+      "explainFig": {
+        "img": "../../media/mathe/zinsen.svg",
+        "alt": "Kapital, Zinssatz und Zinsen"
+      }
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "num",
+      "prompt": "Für 6000 € Kredit zahlt Herr Homburg nach einem Jahr 390 € Zinsen.",
+      "answer": 6.5,
+      "unit": "%",
+      "explain": "<p>390 · 100 : 6000 = <b>6,5 %</b>.</p>",
+      "sub": "Zinssatz?",
+      "show": "6,5 %"
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "num",
+      "prompt": "Auf dem Sparbuch waren am Jahresanfang 950 €, am Jahresende 969 €. Es wurde nichts ein- oder ausgezahlt.",
+      "answer": 2,
+      "unit": "%",
+      "explain": "<p>Zinsen: 969 − 950 = 19 €. 19 · 100 : 950 = <b>2 %</b>.</p>",
+      "sub": "Zinssatz?",
+      "hint": "Zuerst die Zinsen ausrechnen."
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "num",
+      "prompt": "Frau Siede zahlt bei 8 % Zinssatz nach einem Jahr 1200 € Zinsen.",
+      "answer": 15000,
+      "unit": "€",
+      "explain": "<p>K = 1200 · 100 : 8 = <b>15 000 €</b>.</p>",
+      "sub": "Wie viel Geld hat sie geliehen?",
+      "explainFig": {
+        "img": "../../media/mathe/zinsen.svg",
+        "alt": "Kapital, Zinssatz und Zinsen"
+      }
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "table",
+      "prompt": "Ergänze die fehlenden Werte (Zinsen für 1 Jahr).",
+      "table": {
+        "head": [
+          "Kapital (€)",
+          "Zinssatz (%)",
+          "Zinsen (€)"
+        ],
+        "rows": [
+          [
+            "600",
+            "1,5",
+            {
+              "a": 9
+            }
+          ],
+          [
+            "2000",
+            {
+              "a": 3.5,
+              "show": "3,5"
+            },
+            "70"
+          ],
+          [
+            {
+              "a": 1600
+            },
+            "2",
+            "32"
+          ]
+        ]
+      },
+      "explain": "<p>600·1,5:100 = 9 € · 70·100:2000 = 3,5 % · 32·100:2 = <b>1600 €</b>.</p>",
+      "hint": "Überlege je Zeile: Was ist gesucht, Z, p oder K?",
+      "explainFig": {
+        "img": "../../media/mathe/zinsen.svg",
+        "alt": "Kapital, Zinssatz und Zinsen"
+      }
+    },
+    {
+      "part": "P7 · Zinsen",
+      "type": "mc",
+      "prompt": "Alex legt 480 € zu 2,25 % an, Nina 600 € zu 1,75 %.",
+      "options": [
+        "Nina",
+        "Beide gleich viel",
+        "Alex"
+      ],
+      "answer": 2,
+      "explain": "<p>Alex: 480 · 2,25 : 100 = 10,80 €. Nina: 600 · 1,75 : 100 = 10,50 €. <b>Alex</b> bekommt mehr.</p>",
+      "sub": "Wer bekommt nach einem Jahr mehr Zinsen?"
+    }
+  ]
+};
+</script>
+<script src="../../engine/land.js"></script>
+<script src="../../engine/scenes.js"></script>
+<script src="../../engine/quiz.js"></script>
+</body>
+</html>

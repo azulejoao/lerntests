@@ -199,6 +199,7 @@ function learnHTML() {
   T.learn.forEach((s, i) => {
     h += '<details class="card learn-sec"' + (i === 0 ? " open" : "") + '><summary><span class="ln">' + (i + 1) + "</span>" + esc(s.title) + '</summary><div class="body">';
     if (s.intro) h += "<p>" + s.intro + "</p>";
+    if (s.checklist && T.checklist) h += checklistHTML(false);
     if (s.words && s.words.length) h += "<h3>" + esc(L.words) + "</h3>" + lrows(s.words);
     if (s.phrases && s.phrases.length) h += "<h3>" + esc(L.phrases) + "</h3>" + lrows(s.phrases);
     if (s.dialog && s.dialog.length) h += "<h3>" + esc(L.dialog) + '</h3><div class="dialog">' + s.dialog.map(d => '<div class="dl"><b>' + esc(d[0]) + '</b><div><div class="fx">' + d[1] + sayBtn(d[1]) + '</div><div class="tr">' + d[2] + "</div></div></div>").join("") + "</div>";
@@ -413,6 +414,22 @@ function showHint() {
   Q.hint = true; $("#hintbox").hidden = false; $("#hintbox").innerHTML = "<p><b>" + esc(L.hint) + ":</b> " + q.hint + "</p>"; $("#hintBtn").disabled = true;
 }
 
+// "Ich kann ..." checklist (optional T.checklist = [[part, text], ...]): rows match the school's self-assessment sheet.
+// With result = true each row gets a smiley from the first-try answers of this run (80 % and more, 50 % and more, below).
+function checklistHTML(result) {
+  let h = '<h2>Ich kann …</h2><div class="tblwrap"><table class="qtable checklist"><tr><th>Bereich</th>' + (result ? '<th>Richtig</th><th>Stand</th>' : '<th>Fragen</th>') + "</tr>";
+  T.checklist.forEach(([part, text]) => {
+    const all = T.questions.map((q, i) => i).filter(i => T.questions[i].part === part);
+    h += '<tr><td style="text-align:left"><b>' + esc(part) + "</b><br>" + esc(text) + "</td>";
+    if (!result) h += "<td>" + all.length + "</td></tr>";
+    else {
+      const done = all.filter(i => i in S.first), ok = done.filter(i => S.first[i]).length, r = done.length ? ok / done.length : null;
+      h += "<td>" + (done.length ? ok + " / " + done.length : "–") + '</td><td style="font-size:1.6em">' + (r === null ? "–" : r >= 0.8 ? "🙂" : r >= 0.5 ? "😐" : "🙁") + "</td></tr>";
+    }
+  });
+  return h + "</table></div>" + (result ? '<p><small>Gewertet wird der erste Versuch. 🙂 ab 80 % richtig, 😐 ab 50 %, 🙁 darunter.</small></p>' : "");
+}
+
 function renderEnd() {
   $("#qcard").hidden = true; $("#endcard").hidden = false; $("#barfill").style.width = "100%";
   const ids = Object.keys(S.first).map(Number), right = ids.filter(i => S.first[i]).length, miss = ids.filter(i => !S.first[i]);
@@ -420,6 +437,7 @@ function renderEnd() {
   const grade = L.grades[pct >= 92 ? 0 : pct >= 80 ? 1 : pct >= 65 ? 2 : pct >= 50 ? 3 : 4];
   let h = '<span class="eyebrow">' + esc(L.endEyebrow) + '</span><div class="big">' + pct + " %</div>" +
     '<p style="margin:0"><b>' + esc(T.grades ? T.grades(pct) : grade) + "</b> " + right + " " + L.of + " " + ids.length + " " + L.ofFirst + ", " + fmt(S.pts) + " " + L.of + " " + ptsText(S.max) + ".</p>";
+  if (T.checklist) h += checklistHTML(true);
   if (miss.length) h += "<h2>" + esc(L.practise) + '</h2><ul class="miss">' + miss.map(i => "<li>" + esc(strip(QS[i].prompt).slice(0, 110)) + "</li>").join("") + "</ul>";
   h += '<div class="actions" style="justify-content:flex-start">' + (miss.length ? '<button class="btn signal" id="redoMiss">' + esc(L.redo) + "</button>" : "") +
     '<button class="btn primary" id="allAgain">' + esc(L.allAgain) + "</button></div>";
